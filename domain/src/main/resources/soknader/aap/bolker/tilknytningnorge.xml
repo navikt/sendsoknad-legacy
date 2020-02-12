@@ -76,6 +76,10 @@
                 <id>tilAar</id>
                 <type>textbox</type>
             </property>
+            <property>
+                <id>eospsnummer</id>
+                <type>textbox</type>
+            </property>
         </properties>
     </faktum>
 </soknad>
