@@ -79,6 +79,9 @@
             <property>
                 <id>eospsnummer</id>
                 <type>textbox</type>
+                <constraints>
+                    <constraint>value == 'true'</constraint>
+                </constraints>
             </property>
         </properties>
     </faktum>
