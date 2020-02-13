@@ -54,9 +54,9 @@
     <faktum>
         <id>informasjonsside.stonad.barnepass</id>
     </faktum>
-    <faktum>
-        <id>informasjonsside.stonad.familie</id>
-    </faktum>
+    <!--<faktum>-->
+        <!--<id>informasjonsside.stonad.familie</id>-->
+    <!--</faktum>-->
 
     <!-- bolker -->
     <!-- reiseaktivitet-->
@@ -1210,26 +1210,26 @@
     </faktum>
 
     <!-- Tilsyn av familie -->
-    <faktum>
-        <id>tilsynfamilie.periode</id>
-        <dependOn>informasjonsside.stonad.familie</dependOn>
-        <dependOnValues><value>true</value></dependOnValues>
-    </faktum>
-    <faktum>
-        <id>tilsynfamilie.persontilsyn</id>
-        <dependOn>informasjonsside.stonad.familie</dependOn>
-        <dependOnValues><value>true</value></dependOnValues>
-    </faktum>
-    <faktum>
-        <id>tilsynfamilie.typetilsyn</id>
-        <dependOn>informasjonsside.stonad.familie</dependOn>
-        <dependOnValues><value>true</value></dependOnValues>
-    </faktum>
-    <faktum>
-        <id>tilsynfamilie.deletilsyn</id>
-        <dependOn>informasjonsside.stonad.familie</dependOn>
-        <dependOnValues><value>true</value></dependOnValues>
-    </faktum>
+    <!--<faktum>-->
+        <!--<id>tilsynfamilie.periode</id>-->
+        <!--<dependOn>informasjonsside.stonad.familie</dependOn>-->
+        <!--<dependOnValues><value>true</value></dependOnValues>-->
+    <!--</faktum>-->
+    <!--<faktum>-->
+        <!--<id>tilsynfamilie.persontilsyn</id>-->
+        <!--<dependOn>informasjonsside.stonad.familie</dependOn>-->
+        <!--<dependOnValues><value>true</value></dependOnValues>-->
+    <!--</faktum>-->
+    <!--<faktum>-->
+        <!--<id>tilsynfamilie.typetilsyn</id>-->
+        <!--<dependOn>informasjonsside.stonad.familie</dependOn>-->
+        <!--<dependOnValues><value>true</value></dependOnValues>-->
+    <!--</faktum>-->
+    <!--<faktum>-->
+        <!--<id>tilsynfamilie.deletilsyn</id>-->
+        <!--<dependOn>informasjonsside.stonad.familie</dependOn>-->
+        <!--<dependOnValues><value>true</value></dependOnValues>-->
+    <!--</faktum>-->
 
     <!-- Tilleggsopplysninger -->
     <faktum>
@@ -1242,22 +1242,22 @@
         <flereTillatt>true</flereTillatt>
     </faktum>
 
-    <vedlegg>
-        <faktum>informasjonsside.stonad.familie</faktum>
-        <skjemaNummer>X1</skjemaNummer>
-        <skjemanummerTillegg>familie</skjemanummerTillegg>
-        <onValues>
-            <value>true</value>
-        </onValues>
-    </vedlegg>
-    <vedlegg>
-        <faktum>informasjonsside.stonad.familie</faktum>
-        <skjemaNummer>J4</skjemaNummer>
-        <skjemanummerTillegg>familie</skjemanummerTillegg>
-        <onValues>
-            <value>true</value>
-        </onValues>
-    </vedlegg>
+    <!--<vedlegg>-->
+        <!--<faktum>informasjonsside.stonad.familie</faktum>-->
+        <!--<skjemaNummer>X1</skjemaNummer>-->
+        <!--<skjemanummerTillegg>familie</skjemanummerTillegg>-->
+        <!--<onValues>-->
+            <!--<value>true</value>-->
+        <!--</onValues>-->
+    <!--</vedlegg>-->
+    <!--<vedlegg>-->
+        <!--<faktum>informasjonsside.stonad.familie</faktum>-->
+        <!--<skjemaNummer>J4</skjemaNummer>-->
+        <!--<skjemanummerTillegg>familie</skjemanummerTillegg>-->
+        <!--<onValues>-->
+            <!--<value>true</value>-->
+        <!--</onValues>-->
+    <!--</vedlegg>-->
 
 
     <vedlegg>
