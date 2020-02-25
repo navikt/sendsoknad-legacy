@@ -1,0 +1,20 @@
+# /
+*/.idea
+/.idea
+*.iml
+*.log
+*.log.*
+*.ipr
+*.iws
+/projectFilesBackup/
+rebel.xml
+target
+
+*.project
+*.settings
+*.classpath
+
+consumer/*.pdf
+test.pdf
+
+web/handlebar.pdf
