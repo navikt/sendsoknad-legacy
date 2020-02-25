@@ -99,7 +99,7 @@
         <org.apache.ws.security.wss4j.version>1.6.19</org.apache.ws.security.wss4j.version>
         <ojdbc.version>11.2.0.3</ojdbc.version>
         <org.hsqldb.version>2.5.0</org.hsqldb.version>
-        <spring.version>3.2.18.RELEASE</spring.version>
+        <spring.version>5.2.3.RELEASE</spring.version>
 
         <!-- Scope test-->
         <common-jetty.version>1.0.23</common-jetty.version>
