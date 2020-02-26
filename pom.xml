@@ -99,12 +99,11 @@
         <org.apache.ws.security.wss4j.version>1.6.19</org.apache.ws.security.wss4j.version>
         <ojdbc.version>11.2.0.3</ojdbc.version>
         <org.hsqldb.version>2.5.0</org.hsqldb.version>
-        <spring.version>3.2.18.RELEASE</spring.version>
+        <spring.version>5.2.3.RELEASE</spring.version>
 
         <!-- Scope test-->
         <common-jetty.version>1.0.23</common-jetty.version>
         <common-test.version>1.3</common-test.version>
-        <modig-content.version>2.0.9</modig-content.version>
         <modig-testcertificates.version>1.2.4</modig-testcertificates.version>
 
         <args4j.version>2.33</args4j.version>
@@ -732,17 +731,6 @@
                 <artifactId>jetty-jaas</artifactId>
                 <scope>test</scope>
                 <version>${org.eclipse.jetty.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>no.nav.modig</groupId>
-                <artifactId>modig-content</artifactId>
-                <version>${modig-content.version}</version>
-                <exclusions>
-                    <exclusion>
-                        <groupId>commons-logging</groupId>
-                        <artifactId>commons-logging</artifactId>
-                    </exclusion>
-                </exclusions>
             </dependency>
             <dependency>
                 <groupId>org.assertj</groupId>

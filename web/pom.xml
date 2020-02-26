@@ -32,17 +32,6 @@
     </properties>
 
     <dependencies>
-        <!-- Avhengigheter med scope compile -->
-        <dependency>
-            <groupId>no.nav.modig</groupId>
-            <artifactId>modig-content</artifactId>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.apache.httpcomponents</groupId>
-                    <artifactId>httpcore</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
         <dependency>
             <groupId>no.nav.modig</groupId>
             <artifactId>modig-security-core</artifactId>
@@ -275,7 +264,7 @@
         <dependency>
             <groupId>net.sf.ehcache</groupId>
             <artifactId>ehcache-core</artifactId>
-            <scope>runtime</scope>
+            <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>javax.mail</groupId>
