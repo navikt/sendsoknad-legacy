@@ -100,6 +100,13 @@
         </dependOnValues>
     </faktum>
     <faktum>
+        <id>andreytelser.fraarbeidsgiver.false.planlegg</id>
+        <panel>AndreYtelser</panel>
+        <type>bool</type>
+        <dependOn>andreytelser.fraarbeidsgiver.false.utbetalingsmetode</dependOn>
+        <!--andreytelser.fraarbeidsgiver.false.planlegg will show here-->
+    </faktum>
+    <faktum>
         <id>andreytelser.fraandre</id>
         <panel>AndreYtelser</panel>
         <type>checkboxGroup</type>
