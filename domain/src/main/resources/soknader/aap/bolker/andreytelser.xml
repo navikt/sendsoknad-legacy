@@ -100,11 +100,21 @@
         </dependOnValues>
     </faktum>
     <faktum>
+        <!--andreytelser.fraarbeidsgiver.false.planlegg will show here-->
         <id>andreytelser.fraarbeidsgiver.false.planlegg</id>
         <panel>AndreYtelser</panel>
-        <type>bool</type>
-        <dependOn>andreytelser.fraarbeidsgiver.false.utbetalingsmetode</dependOn>
-        <!--andreytelser.fraarbeidsgiver.false.planlegg will show here-->
+        <dependOn>andreytelser.fraarbeidsgiver</dependOn>
+        <dependOnValues>
+            <value>false</value>
+        </dependOnValues>
+    </faktum>
+    <faktum>
+        <id>andreytelser.fraarbeidsgiver.false.planlegg.true.perioder</id>
+        <panel>AndreYtelser</panel>
+        <dependOn>andreytelser.fraarbeidsgiver.false.planlegg</dependOn>
+        <dependOnValues>
+            <value>plantrue</value>
+        </dependOnValues>
     </faktum>
     <faktum>
         <id>andreytelser.fraandre</id>
