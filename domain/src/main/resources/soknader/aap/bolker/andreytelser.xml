@@ -101,8 +101,8 @@
     </faktum>
     <faktum>
         <id>andreytelser.fraarbeidsgiver.false.planlegg</id>
+        <type>checkboxGroup</type>
         <panel>AndreYtelser</panel>
-        <type>bool</type>
         <dependOn>andreytelser.fraarbeidsgiver</dependOn>
         <dependOnValues>
             <value>false</value>
