@@ -100,10 +100,9 @@
         </dependOnValues>
     </faktum>
     <faktum>
-        <!--SD-1050-->
         <id>andreytelser.fraarbeidsgiver.false.planlegg</id>
         <panel>AndreYtelser</panel>
-        <type>radio</type>
+        <type>bool</type>
         <dependOn>andreytelser.fraarbeidsgiver</dependOn>
         <dependOnValues>
             <value>false</value>
@@ -137,6 +136,13 @@
                 <type>textbox</type>
                 <constraints>
                     <constraint>value == 'periodeusikker'</constraint>
+                </constraints>
+            </property>
+            <property>
+                <id>vetikke</id>
+                <type>textbox</type>
+                <constraints>
+                    <constraint>value == 'periodevetikke'</constraint>
                 </constraints>
             </property>
         </properties>
