@@ -100,21 +100,38 @@
         </dependOnValues>
     </faktum>
     <faktum>
-        <!--andreytelser.fraarbeidsgiver.false.planlegg will show here-->
+        <!--SD-1050-->
         <id>andreytelser.fraarbeidsgiver.false.planlegg</id>
         <panel>AndreYtelser</panel>
-        <dependOn>andreytelser.fraarbeidsgiver</dependOn>
-        <dependOnValues>
-            <value>false</value>
-        </dependOnValues>
+        <type>radio</type>
     </faktum>
     <faktum>
         <id>andreytelser.fraarbeidsgiver.false.planlegg.true.perioder</id>
         <panel>AndreYtelser</panel>
-        <dependOn>andreytelser.fraarbeidsgiver.false.planlegg</dependOn>
-        <dependOnValues>
-            <value>plantrue</value>
-        </dependOnValues>
+        <type>radio</type>
+        <properties>
+            <property>
+                <id>fom</id>
+                <type>textbox</type>
+                <constraints>
+                    <constraint>value == 'periodetrue'</constraint>
+                </constraints>
+            </property>
+            <property>
+                <id>tom</id>
+                <type>textbox</type>
+                <constraints>
+                    <constraint>value == 'periodetrue'</constraint>
+                </constraints>
+            </property>
+            <property>
+                <id>antall</id>
+                <type>textbox</type>
+                <constraints>
+                    <constraint>value == 'periodeusikker'</constraint>
+                </constraints>
+            </property>
+        </properties>
     </faktum>
     <faktum>
         <id>andreytelser.fraandre</id>
