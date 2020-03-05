@@ -104,11 +104,19 @@
         <id>andreytelser.fraarbeidsgiver.false.planlegg</id>
         <panel>AndreYtelser</panel>
         <type>radio</type>
+        <dependOn>andreytelser.fraarbeidsgiver</dependOn>
+        <dependOnValues>
+            <value>false</value>
+        </dependOnValues>
     </faktum>
     <faktum>
         <id>andreytelser.fraarbeidsgiver.false.planlegg.true.perioder</id>
         <panel>AndreYtelser</panel>
-        <type>radio</type>
+        <dependOn>andreytelser.fraarbeidsgiver</dependOn>
+        <dependOnValues>
+            <value>false</value>
+        </dependOnValues>
+        <type>composite</type>
         <properties>
             <property>
                 <id>fom</id>
