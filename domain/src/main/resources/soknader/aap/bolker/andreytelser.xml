@@ -111,10 +111,6 @@
     <faktum>
         <id>andreytelser.fraarbeidsgiver.false.planlegg.true.perioder</id>
         <panel>AndreYtelser</panel>
-        <dependOn>andreytelser.fraarbeidsgiver.false.planlegg</dependOn>
-        <dependOnValues>
-            <value>true</value>
-        </dependOnValues>
         <type>composite</type>
         <properties>
             <property>
@@ -146,6 +142,10 @@
                 </constraints>
             </property>
         </properties>
+        <dependOn>andreytelser.fraarbeidsgiver.false.planlegg</dependOn>
+        <dependOnValues>
+            <value>true</value>
+        </dependOnValues>
     </faktum>
     <faktum>
         <id>andreytelser.fraandre</id>
