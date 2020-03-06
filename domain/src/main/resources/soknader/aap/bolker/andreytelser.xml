@@ -101,7 +101,7 @@
     </faktum>
     <faktum>
         <id>andreytelser.fraarbeidsgiver.false.planlegg</id>
-        <type>checkboxGroup</type>
+        <type>radio</type>
         <panel>AndreYtelser</panel>
         <dependOn>andreytelser.fraarbeidsgiver</dependOn>
         <dependOnValues>
@@ -111,9 +111,9 @@
     <faktum>
         <id>andreytelser.fraarbeidsgiver.false.planlegg.true.perioder</id>
         <panel>AndreYtelser</panel>
-        <dependOn>andreytelser.fraarbeidsgiver</dependOn>
+        <dependOn>andreytelser.fraarbeidsgiver.false.planlegg</dependOn>
         <dependOnValues>
-            <value>false</value>
+            <value>true</value>
         </dependOnValues>
         <type>composite</type>
         <properties>
