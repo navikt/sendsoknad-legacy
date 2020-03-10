@@ -174,7 +174,7 @@
     </faktum>
     <faktum>
         <id>andreytelser.fraandre.utenlandsketrygdemyndigheter.true</id>
-        <type>textbox</type>
+        <type>composite</type>
         <properties>
             <property>
                 <id>ytelse</id>
