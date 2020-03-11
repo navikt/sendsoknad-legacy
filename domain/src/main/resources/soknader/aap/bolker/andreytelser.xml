@@ -173,27 +173,16 @@
         <dependOn>andreytelser.fraandre</dependOn>
     </faktum>
     <faktum>
-        <id>andreytelser.fraandre.utenlandsketrygdemyndigheter.true</id>
-        <type>composite</type>
-        <properties>
-            <property>
-                <id>ytelse</id>
-                <type>textbox</type>
-            </property>
-            <property>
-                <id>land</id>
-                <type>textbox</type>
-            </property>
-        </properties>
+        <id>andreytelser.fraandre.utenlandsketrygdemyndigheter.true.ytelse</id>
+        <type>textbox</type>
         <dependOn>andreytelser.fraandre.utenlandsketrygdemyndigheter</dependOn>
         <dependOnValues>
             <value>true</value>
         </dependOnValues>
     </faktum>
-
     <faktum>
-        <id>andreytelser.fraandre.utenlandsketrygdemyndigheter.sosialhjelp</id>
-        <type>radio</type>
+        <id>andreytelser.fraandre.utenlandsketrygdemyndigheter.true.land</id>
+        <type>textbox</type>
         <dependOn>andreytelser.fraandre.utenlandsketrygdemyndigheter</dependOn>
         <dependOnValues>
             <value>true</value>
