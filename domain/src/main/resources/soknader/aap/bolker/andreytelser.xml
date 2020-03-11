@@ -190,8 +190,9 @@
             <value>true</value>
         </dependOnValues>
     </faktum>
+
     <faktum>
-        <id>andreytelser.fraandre.utenlandsketrygdemyndigheter.true.sosialhjelp</id>
+        <id>andreytelser.fraandre.utenlandsketrygdemyndigheter.sosialhjelp</id>
         <type>radio</type>
         <dependOn>andreytelser.fraandre.utenlandsketrygdemyndigheter</dependOn>
         <dependOnValues>
