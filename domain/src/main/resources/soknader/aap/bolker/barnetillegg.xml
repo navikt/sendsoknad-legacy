@@ -44,6 +44,9 @@
             <property>
                 <id>land</id>
                 <type>country</type>
+                <constraints>
+                    <constraint>type == 'SYSTEMREGISTRERT'</constraint>
+                </constraints>
             </property>
         </properties>
     </faktum>
