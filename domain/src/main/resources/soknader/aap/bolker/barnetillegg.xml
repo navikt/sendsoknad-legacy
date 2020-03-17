@@ -24,14 +24,14 @@
                 <id>sammensattnavn</id>
                 <type>textbox</type>
                 <constraints>
-                    <constraint>type == 'SYSTEMREGISTRERT'</constraint>
+                    <constraint>type == 'BRUKERREGISTRERT'</constraint>
                 </constraints>
             </property>
             <property>
                 <id>fnr</id>
                 <type>textbox</type>
                 <constraints>
-                    <constraint>type == 'SYSTEMREGISTRERT'</constraint>
+                    <constraint>type == 'BRUKERREGISTRERT'</constraint>
                 </constraints>
             </property>
             <property>
