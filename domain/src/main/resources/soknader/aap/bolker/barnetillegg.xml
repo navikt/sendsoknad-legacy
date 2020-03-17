@@ -23,16 +23,10 @@
             <property>
                 <id>sammensattnavn</id>
                 <type>textbox</type>
-                <constraints>
-                    <constraint>type == 'SYSTEMREGISTRERT'</constraint>
-                </constraints>
             </property>
             <property>
                 <id>fnr</id>
                 <type>textbox</type>
-                <constraints>
-                    <constraint>type == 'SYSTEMREGISTRERT'</constraint>
-                </constraints>
             </property>
             <property>
                 <id>fodselsdato</id>
@@ -44,9 +38,6 @@
             <property>
                 <id>land</id>
                 <type>country</type>
-                <constraints>
-                    <constraint>type == 'SYSTEMREGISTRERT'</constraint>
-                </constraints>
             </property>
         </properties>
     </faktum>
