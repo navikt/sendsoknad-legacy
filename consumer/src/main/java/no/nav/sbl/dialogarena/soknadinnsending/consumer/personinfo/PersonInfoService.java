@@ -13,19 +13,19 @@ import static org.slf4j.LoggerFactory.getLogger;
 
 @Component
 public class PersonInfoService {
-
-    static final String UKJENT = "UKJENT";
-    static final String IKKE_REGISTRERT = "IKKE_REGISTRERT";
+    private static final Logger logger = getLogger(PersonInfoService.class);
 
     @Inject
     private PersonInfoServiceSoap personInfoEndpoint;
-    private static final Logger logger = getLogger(PersonInfoService.class);
+
+    static final String UKJENT = "UKJENT";
+    static final String IKKE_REGISTRERT = "IKKE_REGISTRERT";
 
     public String hentYtelseStatus(String fnr) {
         try {
             return mapTilYtelsesstatus(hentPersontatus(fnr));
         } catch (Exception e) {
-            logger.error("Feil ved henting av personstatus for fnr {}", fnr, e);
+            logger.error("Feil ved henting av personstatus", e);
             return UKJENT;
         }
     }
