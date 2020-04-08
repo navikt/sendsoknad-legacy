@@ -22,6 +22,7 @@ import static org.apache.commons.lang3.StringUtils.isEmpty;
 @XmlAccessorType(XmlAccessType.FIELD)
 public class Vedlegg {
     public static final Predicate<Vedlegg> PAAKREVDE_VEDLEGG = vedlegg -> vedlegg != null && !vedlegg.getInnsendingsvalg().equals(IkkeVedlegg);
+    public static final Predicate<Vedlegg> VALIDERT_VEDLEGG = vedlegg -> vedlegg != null && !vedlegg.getInnsendingsvalg().equals(IkkeVedlegg) && !vedlegg.getInnsendingsvalg().equals(VedleggKreves);
     private Long vedleggId;
     private Long soknadId;
     private Long faktumId;

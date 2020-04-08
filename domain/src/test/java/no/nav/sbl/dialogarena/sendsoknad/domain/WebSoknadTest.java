@@ -202,4 +202,35 @@ public class WebSoknadTest {
         WebSoknad webSoknad = new WebSoknad().medVedlegg(vedlegg);
         assertNotEquals(vedlegg, webSoknad.finnVedleggSomMatcherForventning(forventning, faktumId));
     }
+
+    @Test
+    public void skalIkkeReturnereVedleggSomIkkeTillOppsummering() {
+        Long faktumId = 123456L;
+        String skjemanummer = "M6";
+        VedleggForFaktumStruktur forventning = new VedleggForFaktumStruktur()
+                .medSkjemanummer(skjemanummer);
+
+        forventning.setFlereTillatt(true);
+        forventning.setSkjemanummerTillegg("skjemanummertillegg");
+
+        Vedlegg vedlegg = new Vedlegg(1L, faktumId, "K4", Vedlegg.Status.VedleggKreves);
+        vedlegg.medSkjemanummerTillegg("annetSkjemanummertillegg");
+
+        WebSoknad webSoknad = new WebSoknad().medVedlegg(vedlegg);
+        assertNotEquals(vedlegg, webSoknad.finnVedleggMatcherDelsteg(forventning, faktumId));
+    }
+
+    @Test
+    public void skalReturnereVedleggSomSkalTilOppsummering() {
+        Long faktumId = 123456L;
+        String skjemanummer = "N6";
+        VedleggForFaktumStruktur forventning = new VedleggForFaktumStruktur()
+                .medSkjemanummer(skjemanummer);
+        forventning.setFlereTillatt(true);
+
+        Vedlegg vedlegg = new Vedlegg(1L, faktumId, skjemanummer, Vedlegg.Status.SendesSenere);
+
+        WebSoknad webSoknad = new WebSoknad().medVedlegg(vedlegg);
+        assertEquals(vedlegg, webSoknad.finnVedleggMatcherDelsteg(forventning, faktumId));
+    }
 }

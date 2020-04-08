@@ -19,8 +19,7 @@ import java.util.*;
 import java.util.function.Predicate;
 
 import static java.util.stream.Collectors.toList;
-import static no.nav.sbl.dialogarena.sendsoknad.domain.Vedlegg.ER_ANNET_VEDLEGG;
-import static no.nav.sbl.dialogarena.sendsoknad.domain.Vedlegg.ER_LASTET_OPP;
+import static no.nav.sbl.dialogarena.sendsoknad.domain.Vedlegg.*;
 
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -542,6 +541,13 @@ public class WebSoknad implements Serializable {
 
     public Vedlegg finnVedleggSomMatcherForventning(final VedleggForFaktumStruktur vedleggForFaktumStruktur, final Long faktumId) {
         return getVedlegg().stream().filter(new VedleggSomMatcherForventningPredicate(vedleggForFaktumStruktur, faktumId)).findFirst().orElse(null);
+    }
+
+    public Vedlegg finnVedleggMatcherDelsteg(final VedleggForFaktumStruktur vedleggForFaktumStruktur, final Long faktumId) {
+        return getVedlegg()
+                .stream()
+                .filter(VALIDERT_VEDLEGG)
+                .filter(new VedleggSomMatcherForventningPredicate(vedleggForFaktumStruktur, faktumId)).findFirst().orElse(null);
     }
 
     public void fjernFaktaSomIkkeSkalVaereSynligISoknaden(SoknadStruktur struktur) {

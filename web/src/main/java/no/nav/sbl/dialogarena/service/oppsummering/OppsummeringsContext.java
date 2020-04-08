@@ -41,7 +41,7 @@ public class OppsummeringsContext {
                 faktum -> soknadStruktur.vedleggFor(faktum)
                         .stream()
                         .map(vedlegg ->
-                                new OppsummeringsFaktum.OppsummeringsVedlegg(faktum, soknad.finnVedleggSomMatcherForventning(vedlegg, faktum.getFaktumId()), vedlegg))
+                                new OppsummeringsFaktum.OppsummeringsVedlegg(faktum, soknad.finnVedleggMatcherDelsteg(vedlegg, faktum.getFaktumId()), vedlegg))
                         .collect(toList());
 
         Function<Faktum, List<OppsummeringsFaktum>> barnOppsummering =
