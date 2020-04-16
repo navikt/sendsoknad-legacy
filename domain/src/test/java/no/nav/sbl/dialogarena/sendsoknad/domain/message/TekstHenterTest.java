@@ -48,6 +48,12 @@ public class TekstHenterTest {
     }
 
     @Test
+    public void skalHenteBundleForIllegalNokkel() {
+        Properties tekstBundle = tekstHenter.getBundleFor("illegal key", LOCALE_NB);
+        assertTrue(tekstBundle.containsKey(NOKKEL_FELLES));
+    }
+
+    @Test
     public void skalHenteBundleForTiltakspengerMedFellesteksterNb() {
         Properties tekstBundle = tekstHenter.getBundleFor("tiltakspenger", LOCALE_NB);
         assertTrue(tekstBundle.containsKey(NOKKEL_TILTAKSPENGER));

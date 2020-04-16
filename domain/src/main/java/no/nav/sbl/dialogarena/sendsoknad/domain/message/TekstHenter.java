@@ -1,10 +1,14 @@
 package no.nav.sbl.dialogarena.sendsoknad.domain.message;
 
+import org.slf4j.Logger;
+
 import java.util.*;
 
 import static java.util.ResourceBundle.getBundle;
+import static org.slf4j.LoggerFactory.getLogger;
 
 public class TekstHenter {
+    private static final Logger logger = getLogger(TekstHenter.class);
 
     private static final String BOKMAAL = "nb";
     private static final String NYNORSK = "nn";
@@ -37,8 +41,8 @@ public class TekstHenter {
             return hentAlleBundlerForLocale(locale, tekstMap);
         }
 
-        Properties teksterForType = tekstMap.get(type);
-        Properties fellesTekster = tekstMap.get("sendsoknad");
+        Properties teksterForType = getTekster(tekstMap, type);
+        Properties fellesTekster = getTekster(tekstMap, "sendsoknad");
 
         Properties mergetTekster = new Properties();
         mergetTekster.putAll(teksterForType);
@@ -63,18 +67,18 @@ public class TekstHenter {
     }
 
     Map<String, Properties> getTeksterForNb() {
-        return this.teksterForNb;
+        return teksterForNb;
     }
 
     Map<String, Properties> getTeksterForNn() {
-        return this.teksterForNn;
+        return teksterForNn;
     }
 
     Map<String, Properties> getTeksterForEn() {
-        return this.teksterForEn;
+        return teksterForEn;
     }
 
-    private Properties tekstBundleTilProperties(ResourceBundle tekstBundle) {
+    private static Properties tekstBundleTilProperties(ResourceBundle tekstBundle) {
         Properties tekstProperties = new Properties();
         Collection<String> tekstBundleKeys = Collections.list(tekstBundle.getKeys());
 
@@ -95,7 +99,7 @@ public class TekstHenter {
         }
     }
 
-    private List<String> hentTyperForLocale(Locale locale) {
+    private static List<String> hentTyperForLocale(Locale locale) {
         List<String> typer = new ArrayList<>();
         switch (locale.getLanguage()) {
             case BOKMAAL:
@@ -115,11 +119,20 @@ public class TekstHenter {
         return typer;
     }
 
-    private Properties hentAlleBundlerForLocale(Locale locale, Map<String, Properties> tekstMap) {
+    private static Properties hentAlleBundlerForLocale(Locale locale, Map<String, Properties> tekstMap) {
         List<String> typer = hentTyperForLocale(locale);
         Properties mergetTekster = new Properties();
 
-        typer.forEach(type -> mergetTekster.putAll(tekstMap.get(type)));
+        typer.forEach(type -> mergetTekster.putAll(getTekster(tekstMap, type)));
         return mergetTekster;
+    }
+
+    static Properties getTekster(Map<String, Properties> tekstMap, String type) {
+        Properties tekster = tekstMap.get(type);
+        if (tekster == null) {
+            logger.warn("Failed to get text for key '{}'", type);
+            return new Properties();
+        }
+        return tekster;
     }
 }
