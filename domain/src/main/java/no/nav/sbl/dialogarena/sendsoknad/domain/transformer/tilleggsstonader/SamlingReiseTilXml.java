@@ -68,18 +68,21 @@ public class SamlingReiseTilXml {
 
     private static Faktum lagPeriodeAvForsteOgSisteSamlingsperiode(WebSoknad soknad) {
         List<Faktum> periodeFakta = soknad.getFaktaMedKey("reise.samling.fleresamlinger.samling");
-        String fom = periodeFakta.get(0).getProperties().get("fom");
-        String tom = periodeFakta.get(0).getProperties().get("tom");
+        if (!periodeFakta.isEmpty()) {
+            String fom = periodeFakta.get(0).getProperties().get("fom");
+            String tom = periodeFakta.get(0).getProperties().get("tom");
 
-        for (Faktum faktum : periodeFakta) {
-            if (faktum.getProperties().get("fom").compareTo(fom) < 0) {
-                fom = faktum.getProperties().get("fom");
+            for (Faktum faktum : periodeFakta) {
+                if (faktum.getProperties().get("fom").compareTo(fom) < 0) {
+                    fom = faktum.getProperties().get("fom");
+                }
+                if (faktum.getProperties().get("tom").compareTo(tom) > 0) {
+                    tom = faktum.getProperties().get("tom");
+                }
             }
-            if (faktum.getProperties().get("tom").compareTo(tom) > 0) {
-                tom = faktum.getProperties().get("tom");
-            }
+
+            return new Faktum().medProperty("fom", fom).medProperty("tom", tom);
         }
-
-        return new Faktum().medProperty("fom", fom).medProperty("tom", tom);
+        return null;
     }
 }
