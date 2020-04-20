@@ -132,6 +132,10 @@ public class WebSoknad implements Serializable {
         return getVedlegg().stream().filter(Vedlegg.PAAKREVDE_VEDLEGG).collect(toList());
     }
 
+    public List<Vedlegg> hentValidertVedlegg() {
+        return getVedlegg().stream().filter(VALIDERT_VEDLEGG).collect(toList());
+    }
+
     public void setVedlegg(List<Vedlegg> vedlegg) {
         this.vedlegg = vedlegg;
     }
