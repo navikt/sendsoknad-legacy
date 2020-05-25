@@ -48,7 +48,6 @@ public class SoknadXmlValidererTest {
     }
 
     @Test
-    @Ignore
     public void testAapOrdinaerXml() throws Exception {
         testOmXmlValiderer("aap/aap_ordinaer.xml");
     }

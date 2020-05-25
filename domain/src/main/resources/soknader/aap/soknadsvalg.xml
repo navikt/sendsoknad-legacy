@@ -3,7 +3,7 @@
     <faktum kunUtvidet="true">
         <id>soknadsvalg.mottattsisteuker</id>
         <panel>Soknadsvalg</panel>
-        <type>radio</type>
+        <type>hidden</type>
     </faktum>
 
     <faktum>
