@@ -5,9 +5,4 @@
         <panel>Veiledning</panel>
         <type>tekster</type>
     </faktum>
-
-    <faktum>
-        <id>soknadstype</id>
-        <type>hidden</type>
-    </faktum>
 </soknad>
