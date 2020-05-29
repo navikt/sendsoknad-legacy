@@ -34,12 +34,6 @@
         <id>andreytelser.fraarbeidsgiver</id>
         <panel>AndreYtelser</panel>
         <type>string</type>
-        <constraints>
-            <constraint>
-                <faktum>soknadstype</faktum>
-                <expression>value == "ordinaer"</expression>
-            </constraint>
-        </constraints>
     </faktum>
     <faktum>
         <id>andreytelser.fraarbeidsgiver.false.utbetalingsmetode</id>
