@@ -9,17 +9,17 @@ import java.util.List;
 public class AAPGjenopptakInformasjon extends KravdialogInformasjon {
 
     public AAPGjenopptakInformasjon() {
-        super(Collections.singletonList("NAV 11-13.05"));
+        super(Collections.singletonList("NAV 11-13.06"));
     }
 
     @Override
     public String getSoknadTypePrefix() {
-        return "aap.ordinaer";
+        return "aap.gjenopptak";
     }
 
     @Override
     public String getSoknadUrlKey() {
-        return "soknad.aap.ordinaer.path";
+        return "soknad.aap.gjenopptak.path";
     }
 
     @Override
@@ -29,7 +29,7 @@ public class AAPGjenopptakInformasjon extends KravdialogInformasjon {
 
     @Override
     public String getStrukturFilnavn() {
-        return "aap/aap_ordinaer.xml";
+        return "aap/aap_gjenopptak.xml";
     }
 
     @Override

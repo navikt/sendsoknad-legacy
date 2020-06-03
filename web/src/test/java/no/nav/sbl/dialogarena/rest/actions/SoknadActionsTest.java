@@ -17,7 +17,6 @@ import no.nav.sbl.dialogarena.service.HtmlGenerator;
 import no.nav.sbl.dialogarena.soknadinnsending.business.WebSoknadConfig;
 import no.nav.sbl.dialogarena.soknadinnsending.business.service.soknadservice.SoknadService;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
@@ -126,8 +125,7 @@ public class SoknadActionsTest {
         verify(pdfTemplate).fyllHtmlMalMedInnhold(any(WebSoknad.class), eq("/skjema/kvittering"));
     }
 
-    //@Test
-    @Ignore
+    @Test
     public void sendGjenopptakSkalLageGjenopptakPdfMedKodeverksverdier() throws Exception {
         AAPGjenopptakInformasjon aapGjenopptakInformasjon = new AAPGjenopptakInformasjon();
 
