@@ -78,7 +78,7 @@ public abstract class AbstractIT {
 
     private static String readJsonResponseDataFromDisk() throws IOException {
         ClassLoader classloader = Thread.currentThread().getContextClassLoader();
-        try (InputStream is = classloader.getResourceAsStream("skjemautlisting.json")) {
+        try (InputStream is = classloader.getResourceAsStream("sanity.json")) {
             assert is != null;
             return IOUtils.toString(is, UTF_8);
         }
