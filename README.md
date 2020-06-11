@@ -11,11 +11,25 @@ Se [Søknadsdialog](https://confluence.adeo.no/pages/viewpage.action?pageId=1249
 #### Tekster i søknadene
 * ligger samlet i domain/main/resources/tekster
 
+
+## For lokal utviklling
+* installer java 8
+* git cloen repo
+* mvn clean install
+
+### Henvendelser
+Spørsmål tilknyttet kode eller prosjektet kan rettes mot:
+* [team-soknad@nav.no](mailto:team-soknad@nav.no)
+
+### For Navansatte
+Interne henvendelser kan sendes via Slack i kanalen #teamsoknad
+
 ### Teknisk dokumentasjon
 * kjører på JBOSS EAP 7, skal over på kubernetes basert Nais-plattform
 * Java 8
 * javabatcher
 * tradisjonell modulær inndeling av funksjoner. (Se avhengigheter for bygg)
+
 
 #### Større planlagte og pågående større jobber 
 Arbeid som er planlagt og pågår eller planlagt oppstart av<br />
