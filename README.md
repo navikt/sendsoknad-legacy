@@ -14,7 +14,7 @@ Se [Søknadsdialog](https://confluence.adeo.no/pages/viewpage.action?pageId=1249
 
 ## For lokal utviklling
 * installer java 8
-* git cloen repo
+* git clone repo
 * mvn clean install
 
 ### Henvendelser
@@ -25,7 +25,7 @@ Spørsmål tilknyttet kode eller prosjektet kan rettes mot:
 Interne henvendelser kan sendes via Slack i kanalen #teamsoknad
 
 ### Teknisk dokumentasjon
-* kjører på JBOSS EAP 7, skal over på kubernetes basert Nais-plattform
+* kjører på JBOSS EAP 6 med 4 noder i produksjon, skal over på kubernetes basert Nais-plattform
 * Java 8
 * javabatcher
 * tradisjonell modulær inndeling av funksjoner. (Se avhengigheter for bygg)
@@ -33,7 +33,7 @@ Interne henvendelser kan sendes via Slack i kanalen #teamsoknad
 
 #### Større planlagte og pågående større jobber 
 Arbeid som er planlagt og pågår eller planlagt oppstart av<br />
--[ ] Flytte appen over til Github
+-[ ] Flytte [appen over til Github](https://github.com/navikt/sendsoknad)
 -[ ] Ta i bruk ny arkiveringstjeneste
 -[ ] Avslutte mellomlagring i henvendelse, IE mellomlagring i Sendsoknad.
 -[ ] Redusere sirkulære avhengigheter mellom modulene
