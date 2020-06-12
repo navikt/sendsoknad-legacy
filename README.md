@@ -84,11 +84,13 @@ Arbeid som er planlagt og pågår eller planlagt oppstart av<br />
     * openad
 #### Rutine oppgaver
 * Kopiere over endringer til init på github (avsluttes når vi har flyttet over til githubrepo med nais)
-* Oppdattere backup fil for Soknadsveiviser
+* Oppdattere backup fil for Soknadsveiviser<br />
+Hent ut sanity.json ved å copy fra [soknadsveileder tjenestsen](https://tjenester.nav.no/soknadsveiviserproxy/skjemautlisting)
     * sendsoknad/consumer/src/resources/sanity.json<br />
     Backupfil hvis tjenesten er utilgjengelig.
     * sendsoknad/web/src/test/resources/sanity.json<br />
     Benyttes for tester mot annen modul for konsumering av tjenester.
+    
 * Slette mellomlagrede søknader ved endring av faktummodellen (egen rutine)
 
 #### Aksessloggene
