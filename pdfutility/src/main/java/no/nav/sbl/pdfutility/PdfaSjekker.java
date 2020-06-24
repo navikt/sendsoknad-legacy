@@ -38,6 +38,9 @@ public class PdfaSjekker {
         } catch (IOException e) {
             LOGGER.warn("Problem checking fileFormat ",  e);
             return false;
+        } catch (NoSuchMethodError nsme) {
+            LOGGER.warn("Problem checking fileFormat ",  nsme);
+            return false;
         }
         if (result.isValid()) {
             LOGGER.info("The file "  + " is a valid PDF/A-1b file");

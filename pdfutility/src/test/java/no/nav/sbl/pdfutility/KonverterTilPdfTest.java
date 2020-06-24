@@ -8,8 +8,7 @@ import java.io.InputStream;
 
 import static no.nav.sbl.pdfutility.FiletypeSjekker.isPdf;
 import static no.nav.sbl.pdfutility.PdfaSjekker.erPDFA;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 public class KonverterTilPdfTest {
 
@@ -52,6 +51,12 @@ public class KonverterTilPdfTest {
         byte[] imgData = getBytesFromFile("/images/bilde.jpg");
         byte[] pdf = KonverterTilPdf.createPDFFromImage(imgData);
         assertTrue(PdfaSjekker.erPDFA(pdf));
+    }
+
+    @Test
+    public void testAtPDFKanTestesOmPDFA() throws IOException {
+        byte[] pdf = getBytesFromFile("/pdfs/TEST_SKJEMA1.pdf");
+        assertFalse(PdfaSjekker.erPDFA(pdf));
     }
 
     private static byte[] getBytesFromFile(String path) throws IOException {
