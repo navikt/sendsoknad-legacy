@@ -25,7 +25,7 @@
         <org.aspectjweaver.version>1.9.6</org.aspectjweaver.version>
         <org.slf4j.log4-over-slf4j.version>1.7.30</org.slf4j.log4-over-slf4j.version>
         <com.google.guava.version>29.0-jre</com.google.guava.version>
-        <flying-saucer.version>9.1.20</flying-saucer.version>
+        <flying-saucer.version>9.0.4</flying-saucer.version>
         <commons-lang.version>2.6</commons-lang.version>
         <apache-commons-text.version>1.9</apache-commons-text.version>
         <com.lowagie.itext.version>2.1.7</com.lowagie.itext.version>
