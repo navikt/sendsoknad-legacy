@@ -150,15 +150,9 @@ public class VedleggRessurs {
                     tidsbruk.put("TestOmPDFA", System.currentTimeMillis());
                     varImage = false;
                 } catch (Exception e) {
-                    if (e.getMessage().contains("PDF er signert")) {
-                        throw new UgyldigOpplastingTypeException(
-                                e.getMessage(), null,
-                                "opplasting.feilmelding.pdf.signert");
-                    } else {
-                        throw new UgyldigOpplastingTypeException(
-                                e.getMessage(), null,
-                                "opplasting.feilmelding.pdf.kryptert");
-                    }
+                    throw new UgyldigOpplastingTypeException(
+                            e.getMessage(), null,
+                            "opplasting.feilmelding.pdf.kryptert");
                 }
 
             } else {

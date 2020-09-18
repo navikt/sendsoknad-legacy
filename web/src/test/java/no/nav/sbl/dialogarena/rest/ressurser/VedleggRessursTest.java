@@ -59,6 +59,7 @@ public class VedleggRessursTest {
         when(vedleggService.hentVedleggUnderBehandling(eq(BEHANDLINGSID), anyString())).thenReturn(singletonList(vedlegg));
 
         ressurs.lastOppFiler(VEDLEGGSID, BEHANDLINGSID, Collections.emptyList());
+        verify(vedleggService, never()).lagreVedlegg(any(Vedlegg.class), any());
     }
 
     @Test
@@ -90,6 +91,7 @@ public class VedleggRessursTest {
         assertEquals(2, result.size());
         assertEquals(newlyCreatedVedleggsSize0, (long) result.get(0).getStorrelse());
         assertEquals(newlyCreatedVedleggsSize1, (long) result.get(1).getStorrelse());
+        verify(vedleggService, times(2)).lagreVedlegg(any(Vedlegg.class), any());
     }
 
     @Test
@@ -111,6 +113,7 @@ public class VedleggRessursTest {
         assertEquals(2, result.size());
         assertEquals(newlyCreatedVedleggsSize0, (long) result.get(0).getStorrelse());
         assertEquals(newlyCreatedVedleggsSize1, (long) result.get(1).getStorrelse());
+        verify(vedleggService, times(2)).lagreVedlegg(any(Vedlegg.class), any());
     }
 
     @Test
@@ -135,24 +138,28 @@ public class VedleggRessursTest {
             ressurs.uploadFiles(VEDLEGGSID, BEHANDLINGSID, vedlegg, singletonList(getTestFile(ENCRYPTED_PDF)));
             fail("Expected exception to be thrown");
         } catch (UgyldigOpplastingTypeException e) {
-            assertEquals("opplasting.feilmelding.pdf.kryptert", e.getMessage());
+            assertEquals("Klarte ikke å sjekke om vedlegget er gyldig", e.getMessage());
         }
 
         verify(vedleggService, never()).lagreVedlegg(any(Vedlegg.class), any());
     }
 
     @Test
-    public void uploadFiles_signedPdf_shouldThrowException() throws URISyntaxException, IOException {
+    public void uploadFiles_signedPdf_shouldWorkFine() throws URISyntaxException, IOException {
+        WebSoknad soknad = new WebSoknad().medFortsettSoknadUrl("url").medId(71);
+        long newlyCreatedVedleggsId = 71L;
+        long newlyCreatedVedleggsSize = 63L;
+
         Vedlegg vedlegg = createVedlegg();
+        when(vedleggService.lagreVedlegg(any(Vedlegg.class), any())).thenReturn(newlyCreatedVedleggsId);
+        when(vedleggService.hentVedlegg(newlyCreatedVedleggsId, false)).thenReturn(createVedlegg(newlyCreatedVedleggsSize));
+        when(soknadService.hentSoknad(anyString(), anyBoolean(), anyBoolean())).thenReturn(soknad);
 
-        try {
-            ressurs.uploadFiles(VEDLEGGSID, BEHANDLINGSID, vedlegg, singletonList(getTestFile(SIGNED_PDF)));
-            fail("Expected exception to be thrown");
-        } catch (UgyldigOpplastingTypeException e) {
-            assertEquals("opplasting.feilmelding.pdf.signert", e.getMessage());
-        }
+        List<Vedlegg> result = ressurs.uploadFiles(VEDLEGGSID, BEHANDLINGSID, vedlegg, singletonList(getTestFile(SIGNED_PDF)));
 
-        verify(vedleggService, never()).lagreVedlegg(any(Vedlegg.class), any());
+        assertEquals(1, result.size());
+        assertEquals(newlyCreatedVedleggsSize, (long) result.get(0).getStorrelse());
+        verify(vedleggService, times(1)).lagreVedlegg(any(Vedlegg.class), any());
     }
 
     private static Vedlegg createVedlegg() {

@@ -2,8 +2,7 @@ package no.nav.sbl.pdfutility;
 
 import org.junit.Test;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 public class PdfGyldighetsSjekkerTest {
 
@@ -12,7 +11,7 @@ public class PdfGyldighetsSjekkerTest {
         try {
             byte[] imgData = FilHjelpUtility.getBytesFromFile("/pdfs/endringsbeskyttet.pdf");
             PdfGyldighetsSjekker.erGyldig(imgData);
-            assertEquals("ok", "Skulle ha feilet");
+            fail("Expected exception to be thrown");
         } catch (Exception e) {
             assertTrue(e instanceof RuntimeException);
         }
@@ -22,6 +21,4 @@ public class PdfGyldighetsSjekkerTest {
     public void OpplastingAvNormalPdfSkalGaBra() throws Exception {
         PdfGyldighetsSjekker.erGyldig(FilHjelpUtility.getBytesFromFile("/pdfs/minimal.pdf"));
     }
-
-
 }
