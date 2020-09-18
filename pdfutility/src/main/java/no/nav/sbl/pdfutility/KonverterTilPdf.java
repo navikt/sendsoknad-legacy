@@ -25,11 +25,11 @@ import java.io.InputStream;
 
 import static org.slf4j.LoggerFactory.getLogger;
 
-public class KonverterTilPdf {
+class KonverterTilPdf {
 
-    private static Logger LOGGER = getLogger(KonverterTilPdf.class);
+    private static final Logger LOGGER = getLogger(KonverterTilPdf.class);
 
-    public static byte[] createPDFFromImage(byte[] image) {
+    static byte[] createPDFFromImage(byte[] image) {
         try (PDDocument doc = new PDDocument()) {
 
             PDImageXObject pdImage = PDImageXObject.createFromByteArray(doc, image, null);

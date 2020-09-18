@@ -21,11 +21,11 @@ import static java.lang.Double.min;
 import static java.lang.Math.round;
 import static org.slf4j.LoggerFactory.getLogger;
 
-public class KonverterTilPng {
+class KonverterTilPng {
 
-    private static Logger logger = getLogger(KonverterTilPng.class);
+    private static final Logger logger = getLogger(KonverterTilPng.class);
 
-    public static byte[] konverterTilPng(byte[] in, int sideNr) {
+    static byte[] konverterTilPng(byte[] in, int sideNr) {
         if (in == null || in.length == 0) {
             logger.error("Kan ikke konvertere en tom fil til PNG");
             throw new RuntimeException("Kan ikke konvertere en tom fil til PNG");

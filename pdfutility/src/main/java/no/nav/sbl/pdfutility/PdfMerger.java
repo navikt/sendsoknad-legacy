@@ -14,9 +14,9 @@ import java.util.List;
 
 import static org.slf4j.LoggerFactory.getLogger;
 
-public class PdfMerger {
+class PdfMerger {
 
-    private static Logger logger = getLogger(PdfMerger.class);
+    private static final Logger logger = getLogger(PdfMerger.class);
 
     private static byte[] mergePdfer(List<InputStream> docs) {
         try (ByteArrayOutputStream out = new ByteArrayOutputStream()){
@@ -31,7 +31,7 @@ public class PdfMerger {
         }
     }
 
-    public static byte[] mergePdfer(Iterable<byte[]> docs) {
+    static byte[] mergePdfer(Iterable<byte[]> docs) {
         List<InputStream> is = new ArrayList<>();
         try {
             for (byte[] bytes : docs) {
@@ -49,7 +49,7 @@ public class PdfMerger {
         }
     }
 
-    public static int finnAntallSider(byte[] bytes) {
+    static int finnAntallSider(byte[] bytes) {
         try (ByteArrayInputStream stream = new ByteArrayInputStream(bytes);
              PDDocument document = PDDocument.load(stream)) {
             return document.getNumberOfPages();

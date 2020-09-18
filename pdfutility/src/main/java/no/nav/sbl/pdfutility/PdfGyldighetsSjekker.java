@@ -7,11 +7,11 @@ import java.io.ByteArrayInputStream;
 
 import static org.slf4j.LoggerFactory.getLogger;
 
-public class PdfGyldighetsSjekker {
+class PdfGyldighetsSjekker {
 
     private static final Logger logger = getLogger(PdfGyldighetsSjekker.class);
 
-    public static void erGyldig(byte[] input) {
+    static void erGyldig(byte[] input) {
         try (ByteArrayInputStream bais = new ByteArrayInputStream(input);
             PDDocument document = PDDocument.load(bais)){
             erGyldig(document);

@@ -37,5 +37,4 @@ public class PdfUtilities {
     public static int finnAntallSider(byte[] bytes) {
         return PdfMerger.finnAntallSider(bytes);
     }
-
 }

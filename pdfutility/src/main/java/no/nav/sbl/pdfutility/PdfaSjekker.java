@@ -13,11 +13,11 @@ import java.io.IOException;
 
 import static org.slf4j.LoggerFactory.getLogger;
 
-public class PdfaSjekker {
+class PdfaSjekker {
 
-    private static Logger LOGGER = getLogger(PdfaSjekker.class);
+    private static final Logger LOGGER = getLogger(PdfaSjekker.class);
 
-    public static boolean erPDFA(byte[] input) {
+    static boolean erPDFA(byte[] input) {
         try (ByteArrayInputStream bais = new ByteArrayInputStream(input)) {
             return erPDFA(new ByteArrayDataSource(bais));
         } catch (IOException e) {
@@ -35,11 +35,8 @@ public class PdfaSjekker {
             document.validate();
             result = document.getResult();
             document.close();
-        } catch (IOException e) {
-            LOGGER.warn("Problem checking fileFormat ",  e);
-            return false;
-        } catch (NoSuchMethodError nsme) {
-            LOGGER.warn("Problem checking fileFormat ",  nsme);
+        } catch (IOException | NoSuchMethodError e) {
+            LOGGER.warn("Problem checking fileFormat",  e);
             return false;
         }
         if (result.isValid()) {
