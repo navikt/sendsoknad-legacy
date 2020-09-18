@@ -70,8 +70,8 @@ public class VedleggServiceTest {
         when(vedleggRepository.opprettEllerEndreVedlegg(any(Vedlegg.class), captor.capture())).thenReturn(11L);
 
         byte[] imgData = getBytesFromFile("/images/bilde.jpg");
-        List<Long> ids = vedleggService.lagreVedlegg(vedlegg, PdfUtilities.createPDFFromImage(imgData));
-        assertTrue(ids.contains(11L));
+        long id = vedleggService.lagreVedlegg(vedlegg, PdfUtilities.createPDFFromImage(imgData));
+        assertEquals(11L, id);
     }
 
     @Test
@@ -161,9 +161,9 @@ public class VedleggServiceTest {
         ArgumentCaptor<byte[]> captor = ArgumentCaptor.forClass(byte[].class);
         when(vedleggRepository.opprettEllerEndreVedlegg(any(Vedlegg.class), captor.capture())).thenReturn(10L, 11L, 12L, 13L, 14L);
 
-        List<Long> ids = vedleggService.lagreVedlegg(vedlegg, getBytesFromFile("/pdfs/navskjema.pdf"));
+        long id = vedleggService.lagreVedlegg(vedlegg, getBytesFromFile("/pdfs/navskjema.pdf"));
         assertTrue(PdfUtilities.isPDF(captor.getValue()));
-        assertTrue(ids.contains(10L));
+        assertEquals(10L, id);
     }
 
     @Test

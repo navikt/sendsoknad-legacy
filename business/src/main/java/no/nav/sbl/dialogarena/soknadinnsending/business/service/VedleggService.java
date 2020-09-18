@@ -147,17 +147,16 @@ public class VedleggService {
     }
 
     @Transactional
-    public List<Long> lagreVedlegg(Vedlegg vedlegg, byte[] input) {
-        List<Long> resultat;
-        resultat = lagrePDFVedlegg(vedlegg, input);
+    public long lagreVedlegg(Vedlegg vedlegg, byte[] input) {
+        long resultat = lagrePDFVedlegg(vedlegg, input);
         repository.settSistLagretTidspunkt(vedlegg.getSoknadId());
         return resultat;
     }
 
-    private List<Long> lagrePDFVedlegg(Vedlegg vedlegg, byte[] side) {
-        logger.info("SoknadId="+ vedlegg.getSoknadId() + " VedleggId="+vedlegg.getVedleggId() + " filstørrelse="+side.length);
+    private long lagrePDFVedlegg(Vedlegg vedlegg, byte[] side) {
+        logger.info("SoknadId={} VedleggId={} filstørrelse={}", vedlegg.getSoknadId(), vedlegg.getVedleggId(), side.length);
         Vedlegg sideVedlegg = opprettVedlegg(vedlegg, side.length, vedlegg.getAntallSider());
-        return Collections.singletonList(vedleggRepository.opprettEllerEndreVedlegg(sideVedlegg, side));
+        return vedleggRepository.opprettEllerEndreVedlegg(sideVedlegg, side);
     }
 
     public List<Vedlegg> hentVedleggUnderBehandling(String behandlingsId, String fillagerReferanse) {

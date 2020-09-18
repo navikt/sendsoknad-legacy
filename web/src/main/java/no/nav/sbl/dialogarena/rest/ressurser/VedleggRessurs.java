@@ -25,6 +25,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 import static javax.ws.rs.core.MediaType.MULTIPART_FORM_DATA;
@@ -100,10 +101,11 @@ public class VedleggRessurs {
     @Path("/fil")
     @Consumes(MULTIPART_FORM_DATA)
     @SjekkTilgangTilSoknad(type = Vedlegg)
-    public List<Vedlegg> lastOppFiler(@PathParam("vedleggId") final Long vedleggId, @QueryParam("behandlingsId") String behandlingsId, @FormDataParam("files[]") final List<FormDataBodyPart> files) {
+    public List<Vedlegg> lastOppFiler(@PathParam("vedleggId") final Long vedleggId,
+                                      @QueryParam("behandlingsId") String behandlingsId,
+                                      @FormDataParam("files[]") final List<FormDataBodyPart> files) {
         Map<String, Long> tidsbruk = new HashMap<>();
         tidsbruk.put("Start", System.currentTimeMillis());
-        WebSoknad soknad = soknadService.hentSoknad(behandlingsId, true, false);
         tidsbruk.put("HentetSoknad", System.currentTimeMillis());
         Vedlegg forventning = vedleggService.hentVedlegg(vedleggId, false);
         tidsbruk.put("HentetVedlegg", System.currentTimeMillis());
@@ -116,26 +118,36 @@ public class VedleggRessurs {
         }
         tidsbruk.put("SjekketTotalFilstorrelse", System.currentTimeMillis());
 
+        List<byte[]> fileContent = files.stream().map(this::getByteArray).collect(Collectors.toList());
+        List<Vedlegg> res = uploadFiles(vedleggId, behandlingsId, forventning, fileContent);
+
+        tidsbruk.put("Slutt", System.currentTimeMillis());
+        loggStatistikk(tidsbruk, "TIDSBRUK:lastOppFiler for behandlingsid=" + behandlingsId + " og vedleggsid=" + vedleggId);
+        return res;
+    }
+
+    List<Vedlegg> uploadFiles(Long vedleggId, String behandlingsId, Vedlegg forventning, List<byte[]> files) {
+        WebSoknad soknad = soknadService.hentSoknad(behandlingsId, true, false);
+
         List<Vedlegg> res = new ArrayList<>();
-        for (FormDataBodyPart file : files) {
-            Map<String, Long> tidsbruk2 = new HashMap<>();
-            tidsbruk2.put("Start", System.currentTimeMillis());
-            byte[] in = getByteArray(file);
+        for (byte[] file : files) {
+            Map<String, Long> tidsbruk = new HashMap<>();
+            tidsbruk.put("Start", System.currentTimeMillis());
             boolean erPdfa;
             boolean varImage;
             // Sjekk og konvertert til PDF dersom image
-            if (PdfUtilities.isImage(in)) {
-                in = PdfUtilities.createPDFFromImage(in);
-                tidsbruk2.put("KonvertertFraImage", System.currentTimeMillis());
+            if (PdfUtilities.isImage(file)) {
+                file = PdfUtilities.createPDFFromImage(file);
+                tidsbruk.put("KonvertertFraImage", System.currentTimeMillis());
                 erPdfa = true;
                 varImage = true;
-            } else if (PdfUtilities.isPDF(in)) {
+            } else if (PdfUtilities.isPDF(file)) {
                 // Kontroller at PDF er lovlig, dvs. ikke encrypted og passordbeskyttet
                 try {
-                    PdfUtilities.erGyldig(in);
-                    tidsbruk2.put("KontrollertLesbarPDF", System.currentTimeMillis());
-                    erPdfa = PdfUtilities.erPDFA(in);
-                    tidsbruk2.put("TestOmPDFA", System.currentTimeMillis());
+                    PdfUtilities.erGyldig(file);
+                    tidsbruk.put("KontrollertLesbarPDF", System.currentTimeMillis());
+                    erPdfa = PdfUtilities.erPDFA(file);
+                    tidsbruk.put("TestOmPDFA", System.currentTimeMillis());
                     varImage = false;
                 } catch (Exception e) {
                     if (e.getMessage().contains("PDF er signert")) {
@@ -147,19 +159,14 @@ public class VedleggRessurs {
                                 e.getMessage(), null,
                                 "opplasting.feilmelding.pdf.kryptert");
                     }
-
                 }
+
             } else {
                 throw new UgyldigOpplastingTypeException(
                         "Ugyldig filtype for opplasting", null,
                         "opplasting.feilmelding.feiltype");
             }
 
-            long contentDispositionSize = file.getContentDisposition().getSize();
-            if (contentDispositionSize != in.length)
-                logger.warn("Lengths differ! ContentDisposition size: {}, byte length: {}", contentDispositionSize, in.length);
-            else
-                logger.info("Lengths do not differ. ContentDisposition size: {}", contentDispositionSize);
             Vedlegg vedlegg = new Vedlegg()
                     .medVedleggId(null)
                     .medSoknadId(soknad.getSoknadId())
@@ -167,30 +174,22 @@ public class VedleggRessurs {
                     .medSkjemaNummer(forventning.getSkjemaNummer())
                     .medSkjemanummerTillegg(forventning.getSkjemanummerTillegg())
                     .medNavn(forventning.getNavn())
-                    .medStorrelse(contentDispositionSize)
+                    .medStorrelse((long) file.length)
                     .medFillagerReferanse(forventning.getFillagerReferanse())
-                    .medData(in) // invariant: alltid PDF
+                    .medData(file) // invariant: alltid PDF
                     .medOpprettetDato(forventning.getOpprettetDato())
                     .medInnsendingsvalg(UnderBehandling);
 
             vedlegg.setFilnavn(settFilensFiltype(vedlegg, erPdfa));
-            vedlegg.setAntallSider(PdfUtilities.finnAntallSider(in));
-            List<Long> ids = vedleggService.lagreVedlegg(vedlegg, in);
+            vedlegg.setAntallSider(PdfUtilities.finnAntallSider(file));
+            long id = vedleggService.lagreVedlegg(vedlegg, file);
+            res.add(vedleggService.hentVedlegg(id, false));
 
-            if (ids.size() != 1)
-                logger.warn("Unexpected number of ids returned! Size: {}", ids.size());
-
-            for (Long id : ids) {
-                res.add(vedleggService.hentVedlegg(id, false));
-            }
-            tidsbruk2.put("LagretPDF", System.currentTimeMillis());
+            tidsbruk.put("LagretPDF", System.currentTimeMillis());
             tidsbruk.put("Slutt", System.currentTimeMillis());
-            loggStatistikk(tidsbruk2, "TIDSBRUK:lastOppFil, FILFORMAT=" + (varImage ? "Image" : (erPdfa ? "PDFA" : "PDF"))
-                    + " id=" + ids.get(0)
-                    + " for behandlingsid=" + behandlingsId + " og vedleggsid=" + vedleggId);
+            loggStatistikk(tidsbruk, "TIDSBRUK:lastOppFil, FILFORMAT=" + (varImage ? "Image" : (erPdfa ? "PDFA" : "PDF"))
+                    + " id=" + id + " for behandlingsid=" + behandlingsId + " og vedleggsid=" + vedleggId);
         }
-        tidsbruk.put("Slutt", System.currentTimeMillis());
-        loggStatistikk(tidsbruk, "TIDSBRUK:lastOppFiler for behandlingsid=" + behandlingsId + " og vedleggsid=" + vedleggId);
         return res;
     }
 
