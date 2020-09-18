@@ -155,6 +155,8 @@ public class VedleggRessurs {
                         "opplasting.feilmelding.feiltype");
             }
 
+            if (file.getContentDisposition().getSize() != in.length)
+                logger.warn("Lengths differ! ContentDisposition size: {}, byte length: {}", file.getContentDisposition().getSize(), in.length);
             Vedlegg vedlegg = new Vedlegg()
                     .medVedleggId(null)
                     .medSoknadId(soknad.getSoknadId())
@@ -171,6 +173,10 @@ public class VedleggRessurs {
             vedlegg.setFilnavn(settFilensFiltype(vedlegg, erPdfa));
             vedlegg.setAntallSider(PdfUtilities.finnAntallSider(in));
             List<Long> ids = vedleggService.lagreVedlegg(vedlegg, in);
+
+            if (ids.size() != 1)
+                logger.warn("Unexpected number of ids returned! Size: {}", ids.size());
+
             for (Long id : ids) {
                 res.add(vedleggService.hentVedlegg(id, false));
             }
