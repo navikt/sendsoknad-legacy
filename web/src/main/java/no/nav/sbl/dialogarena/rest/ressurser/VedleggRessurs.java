@@ -157,6 +157,8 @@ public class VedleggRessurs {
 
             if (file.getContentDisposition().getSize() != in.length)
                 logger.warn("Lengths differ! ContentDisposition size: {}, byte length: {}", file.getContentDisposition().getSize(), in.length);
+            else
+                logger.info("Lengths do not differ. ContentDisposition size: {}", file.getContentDisposition().getSize());
             Vedlegg vedlegg = new Vedlegg()
                     .medVedleggId(null)
                     .medSoknadId(soknad.getSoknadId())
