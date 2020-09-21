@@ -59,7 +59,9 @@ public class VedleggRessurs {
     public void lagreVedlegg(@PathParam("vedleggId") final Long vedleggId, Vedlegg vedlegg) {
         Map<String, Long> tidsbruk = new HashMap<>();
         tidsbruk.put("Start", System.currentTimeMillis());
+
         vedleggService.lagreVedlegg(vedleggId, vedlegg);
+
         tidsbruk.put("Slutt", System.currentTimeMillis());
         loggStatistikk(tidsbruk, "TIDSBRUK:lagreVedlegg, id=" + vedleggId);
     }
@@ -76,8 +78,10 @@ public class VedleggRessurs {
     public List<Vedlegg> hentVedleggUnderBehandling(@PathParam("vedleggId") final Long vedleggId, @QueryParam("behandlingsId") final String behandlingsId) {
         Map<String, Long> tidsbruk = new HashMap<>();
         tidsbruk.put("Start", System.currentTimeMillis());
+
         Vedlegg forventning = vedleggService.hentVedlegg(vedleggId, false);
         List<Vedlegg> vedleggListe = vedleggService.hentVedleggUnderBehandling(behandlingsId, forventning.getFillagerReferanse());
+
         tidsbruk.put("Slutt", System.currentTimeMillis());
         loggStatistikk(tidsbruk, "TIDSBRUK:hentVedleggUnderBehandling, id=" + vedleggId);
         return vedleggListe;
@@ -91,7 +95,9 @@ public class VedleggRessurs {
         logger.info("LagForhandsvisningForVedlegg {} og side {}", vedleggId, side);
         Map<String, Long> tidsbruk = new HashMap<>();
         tidsbruk.put("Start", System.currentTimeMillis());
+
         byte[] sideData = vedleggService.lagForhandsvisning(vedleggId, side);
+
         tidsbruk.put("Slutt", System.currentTimeMillis());
         loggStatistikk(tidsbruk, "TIDSBRUK:lagForhandsvisningForVedlegg, id=" + vedleggId + ", side=" + side + ", størrelse=" +sideData.length);
         return sideData;
@@ -107,7 +113,9 @@ public class VedleggRessurs {
         Map<String, Long> tidsbruk = new HashMap<>();
         tidsbruk.put("Start", System.currentTimeMillis());
         tidsbruk.put("HentetSoknad", System.currentTimeMillis());
+
         Vedlegg forventning = vedleggService.hentVedlegg(vedleggId, false);
+
         tidsbruk.put("HentetVedlegg", System.currentTimeMillis());
 
         long totalStorrelse = estimerTotalVedleggsStorrelse(behandlingsId, files, forventning);
@@ -136,11 +144,13 @@ public class VedleggRessurs {
             boolean erPdfa;
             boolean varImage;
             // Sjekk og konvertert til PDF dersom image
+
             if (PdfUtilities.isImage(file)) {
                 file = PdfUtilities.createPDFFromImage(file);
                 tidsbruk.put("KonvertertFraImage", System.currentTimeMillis());
                 erPdfa = true;
                 varImage = true;
+
             } else if (PdfUtilities.isPDF(file)) {
                 // Kontroller at PDF er lovlig, dvs. ikke encrypted og passordbeskyttet
                 try {
@@ -172,10 +182,10 @@ public class VedleggRessurs {
                     .medFillagerReferanse(forventning.getFillagerReferanse())
                     .medData(file) // invariant: alltid PDF
                     .medOpprettetDato(forventning.getOpprettetDato())
-                    .medInnsendingsvalg(UnderBehandling);
-
+                    .medInnsendingsvalg(UnderBehandling)
+                    .medAntallSider(PdfUtilities.finnAntallSider(file));
             vedlegg.setFilnavn(settFilensFiltype(vedlegg, erPdfa));
-            vedlegg.setAntallSider(PdfUtilities.finnAntallSider(file));
+
             long id = vedleggService.lagreVedlegg(vedlegg, file);
             res.add(vedleggService.hentVedlegg(id, false));
 

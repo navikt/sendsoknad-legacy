@@ -117,7 +117,7 @@ public class VedleggService {
         return vedleggPng;
     }
 
-    private static Vedlegg opprettVedlegg(Vedlegg vedlegg, long size, int antallSider) {
+    private static Vedlegg opprettVedlegg(Vedlegg vedlegg) {
         return new Vedlegg()
                 .medVedleggId(null)
                 .medSoknadId(vedlegg.getSoknadId())
@@ -125,8 +125,8 @@ public class VedleggService {
                 .medSkjemaNummer(vedlegg.getSkjemaNummer())
                 .medSkjemanummerTillegg(vedlegg.getSkjemanummerTillegg())
                 .medNavn(TilleggsInfoService.lesTittelFraJsonString(vedlegg.getNavn()))
-                .medStorrelse(size)
-                .medAntallSider(antallSider)
+                .medStorrelse(vedlegg.getStorrelse())
+                .medAntallSider(vedlegg.getAntallSider())
                 .medData(null)
                 .medOpprettetDato(vedlegg.getOpprettetDato())
                 .medFillagerReferanse(vedlegg.getFillagerReferanse())
@@ -155,7 +155,7 @@ public class VedleggService {
 
     private long lagrePDFVedlegg(Vedlegg vedlegg, byte[] side) {
         logger.info("SoknadId={} VedleggId={} filstørrelse={}", vedlegg.getSoknadId(), vedlegg.getVedleggId(), side.length);
-        Vedlegg sideVedlegg = opprettVedlegg(vedlegg, side.length, vedlegg.getAntallSider());
+        Vedlegg sideVedlegg = opprettVedlegg(vedlegg);
         return vedleggRepository.opprettEllerEndreVedlegg(sideVedlegg, side);
     }
 
