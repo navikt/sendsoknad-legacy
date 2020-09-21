@@ -155,10 +155,11 @@ public class VedleggRessurs {
                         "opplasting.feilmelding.feiltype");
             }
 
-            if (file.getContentDisposition().getSize() != in.length)
-                logger.warn("Lengths differ! ContentDisposition size: {}, byte length: {}", file.getContentDisposition().getSize(), in.length);
+            long contentDispositionSize = file.getContentDisposition().getSize();
+            if (contentDispositionSize != in.length)
+                logger.warn("Lengths differ! ContentDisposition size: {}, byte length: {}", contentDispositionSize, in.length);
             else
-                logger.info("Lengths do not differ. ContentDisposition size: {}", file.getContentDisposition().getSize());
+                logger.info("Lengths do not differ. ContentDisposition size: {}", contentDispositionSize);
             Vedlegg vedlegg = new Vedlegg()
                     .medVedleggId(null)
                     .medSoknadId(soknad.getSoknadId())
@@ -166,7 +167,7 @@ public class VedleggRessurs {
                     .medSkjemaNummer(forventning.getSkjemaNummer())
                     .medSkjemanummerTillegg(forventning.getSkjemanummerTillegg())
                     .medNavn(forventning.getNavn())
-                    .medStorrelse(file.getContentDisposition().getSize())
+                    .medStorrelse(contentDispositionSize)
                     .medFillagerReferanse(forventning.getFillagerReferanse())
                     .medData(in) // invariant: alltid PDF
                     .medOpprettetDato(forventning.getOpprettetDato())
