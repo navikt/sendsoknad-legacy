@@ -110,91 +110,86 @@ public class VedleggRessurs {
     public List<Vedlegg> lastOppFiler(@PathParam("vedleggId") final Long vedleggId,
                                       @QueryParam("behandlingsId") String behandlingsId,
                                       @FormDataParam("files[]") final List<FormDataBodyPart> files) {
-        Map<String, Long> tidsbruk = new HashMap<>();
-        tidsbruk.put("Start", System.currentTimeMillis());
-        tidsbruk.put("HentetSoknad", System.currentTimeMillis());
 
         Vedlegg forventning = vedleggService.hentVedlegg(vedleggId, false);
-
-        tidsbruk.put("HentetVedlegg", System.currentTimeMillis());
 
         long totalStorrelse = estimerTotalVedleggsStorrelse(behandlingsId, files, forventning);
         if (totalStorrelse > MAKS_TOTAL_FILSTORRELSE) {
             logger.info("Totalstørrelse="+ totalStorrelse + " for vedleggId="+vedleggId + " forsøkt lastet opp");
-            tidsbruk.put("SjekketTotalFilstorrelse", System.currentTimeMillis());
             throw new OpplastingException("Kunne ikke lagre fil fordi total filstørrelse er for stor", null, "vedlegg.opplasting.feil.forStor");
         }
-        tidsbruk.put("SjekketTotalFilstorrelse", System.currentTimeMillis());
 
         List<byte[]> fileContent = files.stream().map(this::getByteArray).collect(Collectors.toList());
-        List<Vedlegg> res = uploadFiles(vedleggId, behandlingsId, forventning, fileContent);
-
-        tidsbruk.put("Slutt", System.currentTimeMillis());
-        loggStatistikk(tidsbruk, "TIDSBRUK:lastOppFiler for behandlingsid=" + behandlingsId + " og vedleggsid=" + vedleggId);
-        return res;
+        return uploadFiles(behandlingsId, forventning, fileContent);
     }
 
-    List<Vedlegg> uploadFiles(Long vedleggId, String behandlingsId, Vedlegg forventning, List<byte[]> files) {
+    List<Vedlegg> uploadFiles(String behandlingsId, Vedlegg forventning, List<byte[]> files) {
         WebSoknad soknad = soknadService.hentSoknad(behandlingsId, true, false);
 
-        List<Vedlegg> res = new ArrayList<>();
+        validereFilformat(files);
+        files = konverterTilPdf(files);
+        return lagreVedlegg(forventning, files, soknad);
+    }
+
+    private void validereFilformat(List<byte[]> files) {
         for (byte[] file : files) {
-            Map<String, Long> tidsbruk = new HashMap<>();
-            tidsbruk.put("Start", System.currentTimeMillis());
-            boolean erPdfa;
-            boolean varImage;
-            // Sjekk og konvertert til PDF dersom image
 
-            if (PdfUtilities.isImage(file)) {
-                file = PdfUtilities.createPDFFromImage(file);
-                tidsbruk.put("KonvertertFraImage", System.currentTimeMillis());
-                erPdfa = true;
-                varImage = true;
-
-            } else if (PdfUtilities.isPDF(file)) {
+            if (PdfUtilities.isPDF(file)) {
                 // Kontroller at PDF er lovlig, dvs. ikke encrypted og passordbeskyttet
                 try {
                     PdfUtilities.erGyldig(file);
-                    tidsbruk.put("KontrollertLesbarPDF", System.currentTimeMillis());
-                    erPdfa = PdfUtilities.erPDFA(file);
-                    tidsbruk.put("TestOmPDFA", System.currentTimeMillis());
-                    varImage = false;
                 } catch (Exception e) {
                     throw new UgyldigOpplastingTypeException(
                             e.getMessage(), null,
                             "opplasting.feilmelding.pdf.kryptert");
                 }
 
-            } else {
+            } else if (!PdfUtilities.isImage(file)) {
                 throw new UgyldigOpplastingTypeException(
                         "Ugyldig filtype for opplasting", null,
                         "opplasting.feilmelding.feiltype");
             }
+        }
+    }
 
-            Vedlegg vedlegg = new Vedlegg()
-                    .medVedleggId(null)
-                    .medSoknadId(soknad.getSoknadId())
-                    .medFaktumId(forventning.getFaktumId())
-                    .medSkjemaNummer(forventning.getSkjemaNummer())
-                    .medSkjemanummerTillegg(forventning.getSkjemanummerTillegg())
-                    .medNavn(forventning.getNavn())
-                    .medStorrelse((long) file.length)
-                    .medFillagerReferanse(forventning.getFillagerReferanse())
-                    .medData(file) // invariant: alltid PDF
-                    .medOpprettetDato(forventning.getOpprettetDato())
-                    .medInnsendingsvalg(UnderBehandling)
-                    .medAntallSider(PdfUtilities.finnAntallSider(file));
-            vedlegg.setFilnavn(settFilensFiltype(vedlegg, erPdfa));
+    private List<byte[]> konverterTilPdf(List<byte[]> files) {
+        return files.stream().map(file -> {
+            if (PdfUtilities.isImage(file))
+                return PdfUtilities.createPDFFromImage(file);
+            else
+                return file;
+        }).collect(Collectors.toList());
+    }
+
+    private List<Vedlegg> lagreVedlegg(Vedlegg forventning, List<byte[]> files, WebSoknad soknad) {
+        List<Vedlegg> res = new ArrayList<>();
+        for (byte[] file : files) {
+
+            Vedlegg vedlegg = lagVedlegg(forventning, soknad.getSoknadId(), file);
 
             long id = vedleggService.lagreVedlegg(vedlegg, file);
             res.add(vedleggService.hentVedlegg(id, false));
-
-            tidsbruk.put("LagretPDF", System.currentTimeMillis());
-            tidsbruk.put("Slutt", System.currentTimeMillis());
-            loggStatistikk(tidsbruk, "TIDSBRUK:lastOppFil, FILFORMAT=" + (varImage ? "Image" : (erPdfa ? "PDFA" : "PDF"))
-                    + " id=" + id + " for behandlingsid=" + behandlingsId + " og vedleggsid=" + vedleggId);
         }
         return res;
+    }
+
+    private Vedlegg lagVedlegg(Vedlegg forventning, long soknadsId, byte[] file) {
+
+        Vedlegg vedlegg = new Vedlegg()
+                .medVedleggId(null)
+                .medSoknadId(soknadsId)
+                .medFaktumId(forventning.getFaktumId())
+                .medSkjemaNummer(forventning.getSkjemaNummer())
+                .medSkjemanummerTillegg(forventning.getSkjemanummerTillegg())
+                .medNavn(forventning.getNavn())
+                .medStorrelse((long) file.length)
+                .medFillagerReferanse(forventning.getFillagerReferanse())
+                .medData(file) // invariant: alltid PDF
+                .medOpprettetDato(forventning.getOpprettetDato())
+                .medInnsendingsvalg(UnderBehandling)
+                .medAntallSider(PdfUtilities.finnAntallSider(file));
+        vedlegg.setFilnavn(returnerFilnavnMedFiltype(vedlegg, file));
+        return vedlegg;
     }
 
     private void loggStatistikk(Map<String, Long> tidsbruk, String context) {
@@ -206,7 +201,9 @@ public class VedleggRessurs {
                 .forEach(key -> logger.info("{}: {}", key, tidsbruk.get(key)));
     }
 
-    private String settFilensFiltype(Vedlegg vedlegg, boolean erPdfa) {
+    private String returnerFilnavnMedFiltype(Vedlegg vedlegg, byte[] file) {
+        boolean erPdfa = PdfUtilities.erPDFA(file);
+
         String filnavn = vedlegg.lagFilNavn();
         filnavn = StringUtils.removeEnd(filnavn, ".pdf");
         filnavn = StringUtils.removeEnd(filnavn, ".pdfa");
@@ -228,10 +225,8 @@ public class VedleggRessurs {
             totalStorrelse += vedlegg.getStorrelse();
         }
 
-        if (files != null) {
-            for (FormDataBodyPart file : files) {
-                totalStorrelse += file.getValueAs(File.class).length();
-            }
+        for (FormDataBodyPart file : files) {
+            totalStorrelse += file.getValueAs(File.class).length();
         }
         return totalStorrelse;
     }

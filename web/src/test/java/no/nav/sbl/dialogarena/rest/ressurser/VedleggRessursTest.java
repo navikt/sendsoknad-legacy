@@ -86,7 +86,7 @@ public class VedleggRessursTest {
         when(vedleggService.hentVedlegg(newlyCreatedVedleggsId0, false)).thenReturn(createVedlegg(newlyCreatedVedleggsSize0));
         when(vedleggService.hentVedlegg(newlyCreatedVedleggsId1, false)).thenReturn(createVedlegg(newlyCreatedVedleggsSize1));
 
-        List<Vedlegg> result = ressurs.uploadFiles(VEDLEGGSID, BEHANDLINGSID, vedlegg, asList(getTestFile(MINIMAL_PDF), getTestFile(NORMAL_PDF)));
+        List<Vedlegg> result = ressurs.uploadFiles(BEHANDLINGSID, vedlegg, asList(getTestFile(MINIMAL_PDF), getTestFile(NORMAL_PDF)));
 
         assertEquals(2, result.size());
         assertEquals(newlyCreatedVedleggsSize0, (long) result.get(0).getStorrelse());
@@ -106,7 +106,7 @@ public class VedleggRessursTest {
         when(vedleggService.hentVedlegg(newlyCreatedVedleggsId0, false)).thenReturn(createVedlegg(newlyCreatedVedleggsSize0));
         when(vedleggService.hentVedlegg(newlyCreatedVedleggsId1, false)).thenReturn(createVedlegg(newlyCreatedVedleggsSize1));
 
-        List<Vedlegg> result = ressurs.uploadFiles(VEDLEGGSID, BEHANDLINGSID, vedlegg, asList(getTestFile(MINIMAL_PDF), getTestFile(IMAGE)));
+        List<Vedlegg> result = ressurs.uploadFiles(BEHANDLINGSID, vedlegg, asList(getTestFile(MINIMAL_PDF), getTestFile(IMAGE)));
 
         assertEquals(2, result.size());
         assertEquals(newlyCreatedVedleggsSize0, (long) result.get(0).getStorrelse());
@@ -119,7 +119,7 @@ public class VedleggRessursTest {
         Vedlegg vedlegg = createVedlegg();
 
         try {
-            ressurs.uploadFiles(VEDLEGGSID, BEHANDLINGSID, vedlegg, singletonList(getTestFile(ILLEGAL_FILETYPE)));
+            ressurs.uploadFiles(BEHANDLINGSID, vedlegg, singletonList(getTestFile(ILLEGAL_FILETYPE)));
             fail("Expected exception to be thrown");
         } catch (UgyldigOpplastingTypeException e) {
             assertEquals("Ugyldig filtype for opplasting", e.getMessage());
@@ -133,7 +133,7 @@ public class VedleggRessursTest {
         Vedlegg vedlegg = createVedlegg();
 
         try {
-            ressurs.uploadFiles(VEDLEGGSID, BEHANDLINGSID, vedlegg, singletonList(getTestFile(ENCRYPTED_PDF)));
+            ressurs.uploadFiles(BEHANDLINGSID, vedlegg, singletonList(getTestFile(ENCRYPTED_PDF)));
             fail("Expected exception to be thrown");
         } catch (UgyldigOpplastingTypeException e) {
             assertEquals("Klarte ikke å sjekke om vedlegget er gyldig", e.getMessage());
@@ -151,7 +151,7 @@ public class VedleggRessursTest {
         when(vedleggService.lagreVedlegg(any(Vedlegg.class), any())).thenReturn(newlyCreatedVedleggsId);
         when(vedleggService.hentVedlegg(newlyCreatedVedleggsId, false)).thenReturn(createVedlegg(newlyCreatedVedleggsSize));
 
-        List<Vedlegg> result = ressurs.uploadFiles(VEDLEGGSID, BEHANDLINGSID, vedlegg, singletonList(getTestFile(SIGNED_PDF)));
+        List<Vedlegg> result = ressurs.uploadFiles(BEHANDLINGSID, vedlegg, singletonList(getTestFile(SIGNED_PDF)));
 
         assertEquals(1, result.size());
         assertEquals(newlyCreatedVedleggsSize, (long) result.get(0).getStorrelse());
