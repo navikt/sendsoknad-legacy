@@ -166,6 +166,7 @@ public class VedleggRessursTest {
         Vedlegg vedlegg = new Vedlegg();
         vedlegg.setStorrelse(size);
         vedlegg.setNavn("Test");
+        vedlegg.setData("".getBytes());
         vedlegg.setSkjemaNummer("NAV 71-68.78");
         return vedlegg;
     }
