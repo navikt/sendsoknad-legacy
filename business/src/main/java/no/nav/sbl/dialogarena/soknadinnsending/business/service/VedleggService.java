@@ -36,10 +36,7 @@ import javax.inject.Named;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
@@ -156,6 +153,16 @@ public class VedleggService {
     private long lagrePDFVedlegg(Vedlegg vedlegg, byte[] side) {
         logger.info("SoknadId={} VedleggId={} filstørrelse={}", vedlegg.getSoknadId(), vedlegg.getVedleggId(), side.length);
         Vedlegg sideVedlegg = opprettVedlegg(vedlegg);
+
+        if (!Arrays.equals(vedlegg.getData(), side))
+            logger.warn("Vedlegg_cleanup - Payload differs!");
+        if (vedlegg.getNavn() == null)
+            logger.warn("Vedlegg_cleanup - navn is null!");
+        if (vedlegg.getNavn() != null && !vedlegg.getNavn().equals(sideVedlegg.getNavn()))
+            logger.warn("Vedlegg_cleanup - Navn differs! Navn original: {}, Navn new: {}", vedlegg.getNavn(), sideVedlegg.getNavn());
+        if (sideVedlegg.getFilnavn() != null)
+            logger.warn("Vedlegg_cleanup - Filnavn not null! Filnavn original: {}, Filnavn new: {}", vedlegg.getFilnavn(), sideVedlegg.getFilnavn());
+
         return vedleggRepository.opprettEllerEndreVedlegg(sideVedlegg, side);
     }
 

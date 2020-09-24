@@ -50,6 +50,8 @@ public class VedleggRessursTest {
 
     @Before
     public void setup() {
+        WebSoknad soknad = new WebSoknad().medFortsettSoknadUrl("url").medId(71);
+        when(soknadService.hentSoknad(anyString(), anyBoolean(), anyBoolean())).thenReturn(soknad);
         when(vedleggService.hentVedlegg(VEDLEGGSID, false)).thenReturn(new Vedlegg());
     }
 
@@ -74,7 +76,6 @@ public class VedleggRessursTest {
 
     @Test
     public void uploadFiles_twoProperPdfs_shouldWorkFine() throws URISyntaxException, IOException {
-        WebSoknad soknad = new WebSoknad().medFortsettSoknadUrl("url").medId(71);
         long newlyCreatedVedleggsId0 = 71L;
         long newlyCreatedVedleggsId1 = 68L;
         long newlyCreatedVedleggsSize0 = 63L;
@@ -84,7 +85,6 @@ public class VedleggRessursTest {
         when(vedleggService.lagreVedlegg(any(Vedlegg.class), any())).thenReturn(newlyCreatedVedleggsId0, newlyCreatedVedleggsId1);
         when(vedleggService.hentVedlegg(newlyCreatedVedleggsId0, false)).thenReturn(createVedlegg(newlyCreatedVedleggsSize0));
         when(vedleggService.hentVedlegg(newlyCreatedVedleggsId1, false)).thenReturn(createVedlegg(newlyCreatedVedleggsSize1));
-        when(soknadService.hentSoknad(anyString(), anyBoolean(), anyBoolean())).thenReturn(soknad);
 
         List<Vedlegg> result = ressurs.uploadFiles(VEDLEGGSID, BEHANDLINGSID, vedlegg, asList(getTestFile(MINIMAL_PDF), getTestFile(NORMAL_PDF)));
 
@@ -96,7 +96,6 @@ public class VedleggRessursTest {
 
     @Test
     public void uploadFiles_onePdfAndOneImage_shouldWorkFine() throws URISyntaxException, IOException {
-        WebSoknad soknad = new WebSoknad().medFortsettSoknadUrl("url").medId(71);
         long newlyCreatedVedleggsId0 = 71L;
         long newlyCreatedVedleggsId1 = 68L;
         long newlyCreatedVedleggsSize0 = 63L;
@@ -106,7 +105,6 @@ public class VedleggRessursTest {
         when(vedleggService.lagreVedlegg(any(Vedlegg.class), any())).thenReturn(newlyCreatedVedleggsId0, newlyCreatedVedleggsId1);
         when(vedleggService.hentVedlegg(newlyCreatedVedleggsId0, false)).thenReturn(createVedlegg(newlyCreatedVedleggsSize0));
         when(vedleggService.hentVedlegg(newlyCreatedVedleggsId1, false)).thenReturn(createVedlegg(newlyCreatedVedleggsSize1));
-        when(soknadService.hentSoknad(anyString(), anyBoolean(), anyBoolean())).thenReturn(soknad);
 
         List<Vedlegg> result = ressurs.uploadFiles(VEDLEGGSID, BEHANDLINGSID, vedlegg, asList(getTestFile(MINIMAL_PDF), getTestFile(IMAGE)));
 
@@ -146,14 +144,12 @@ public class VedleggRessursTest {
 
     @Test
     public void uploadFiles_signedPdf_shouldWorkFine() throws URISyntaxException, IOException {
-        WebSoknad soknad = new WebSoknad().medFortsettSoknadUrl("url").medId(71);
         long newlyCreatedVedleggsId = 71L;
         long newlyCreatedVedleggsSize = 63L;
 
         Vedlegg vedlegg = createVedlegg();
         when(vedleggService.lagreVedlegg(any(Vedlegg.class), any())).thenReturn(newlyCreatedVedleggsId);
         when(vedleggService.hentVedlegg(newlyCreatedVedleggsId, false)).thenReturn(createVedlegg(newlyCreatedVedleggsSize));
-        when(soknadService.hentSoknad(anyString(), anyBoolean(), anyBoolean())).thenReturn(soknad);
 
         List<Vedlegg> result = ressurs.uploadFiles(VEDLEGGSID, BEHANDLINGSID, vedlegg, singletonList(getTestFile(SIGNED_PDF)));
 
@@ -170,6 +166,7 @@ public class VedleggRessursTest {
         Vedlegg vedlegg = new Vedlegg();
         vedlegg.setStorrelse(size);
         vedlegg.setNavn("Test");
+        vedlegg.setData("".getBytes());
         vedlegg.setSkjemaNummer("NAV 71-68.78");
         return vedlegg;
     }

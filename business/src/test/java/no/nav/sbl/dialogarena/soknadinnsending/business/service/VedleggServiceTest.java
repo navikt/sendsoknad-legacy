@@ -58,11 +58,11 @@ public class VedleggServiceTest {
                 .medSoknadId(1L)
                 .medFaktumId(1L)
                 .medSkjemaNummer("1")
-                .medNavn("")
+                .medNavn(null)
                 .medStorrelse(1L)
                 .medAntallSider(1)
                 .medFillagerReferanse(null)
-                .medData(null)
+                .medData("".getBytes())
                 .medOpprettetDato(DateTime.now().getMillis())
                 .medInnsendingsvalg(VedleggKreves);
 
@@ -154,7 +154,7 @@ public class VedleggServiceTest {
                 .medStorrelse(1L)
                 .medAntallSider(1)
                 .medFillagerReferanse(null)
-                .medData(null)
+                .medData("".getBytes())
                 .medOpprettetDato(DateTime.now().getMillis())
                 .medInnsendingsvalg(VedleggKreves);
 
