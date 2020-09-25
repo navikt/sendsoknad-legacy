@@ -263,6 +263,8 @@ public class Vedlegg {
     @XmlTransient
     @JsonIgnore
     public byte[] getData() {
+        if (data == null)
+            return null;
         return data.clone();
     }
 
