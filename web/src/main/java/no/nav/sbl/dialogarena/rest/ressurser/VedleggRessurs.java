@@ -124,11 +124,9 @@ public class VedleggRessurs {
     }
 
     List<Vedlegg> uploadFiles(String behandlingsId, Vedlegg forventning, List<byte[]> files) {
-        WebSoknad soknad = soknadService.hentSoknad(behandlingsId, true, false);
-
         validereFilformat(files);
         files = konverterTilPdf(files);
-        return lagreVedlegg(forventning, files, soknad);
+        return lagreVedlegg(forventning, files, behandlingsId);
     }
 
     private void validereFilformat(List<byte[]> files) {
@@ -161,13 +159,16 @@ public class VedleggRessurs {
         }).collect(Collectors.toList());
     }
 
-    private List<Vedlegg> lagreVedlegg(Vedlegg forventning, List<byte[]> files, WebSoknad soknad) {
+    private List<Vedlegg> lagreVedlegg(Vedlegg forventning, List<byte[]> files, String behandlingsId) {
+        WebSoknad soknad = soknadService.hentSoknad(behandlingsId, true, false);
+        long soknadsId = soknad.getSoknadId();
+
         List<Vedlegg> res = new ArrayList<>();
         for (byte[] file : files) {
 
-            Vedlegg vedlegg = lagVedlegg(forventning, soknad.getSoknadId(), file);
+            Vedlegg vedlegg = lagVedlegg(forventning, soknadsId, file);
 
-            long id = vedleggService.lagreVedlegg(vedlegg, file);
+            long id = vedleggService.lagreVedlegg(vedlegg);
             res.add(vedleggService.hentVedlegg(id, false));
         }
         return res;
@@ -190,15 +191,6 @@ public class VedleggRessurs {
                 .medAntallSider(PdfUtilities.finnAntallSider(file));
         vedlegg.setFilnavn(returnerFilnavnMedFiltype(vedlegg, file));
         return vedlegg;
-    }
-
-    private void loggStatistikk(Map<String, Long> tidsbruk, String context) {
-        if (tidsbruk.get("Slutt") != null && tidsbruk.get("Start") != null) {
-            logger.info("{} tidsbruk : {}", context, (tidsbruk.get("Slutt") - tidsbruk.get("Start")));
-        }
-        tidsbruk.keySet().stream()
-                .filter(key -> !key.equalsIgnoreCase("Start") && !key.equalsIgnoreCase("Slutt"))
-                .forEach(key -> logger.info("{}: {}", key, tidsbruk.get(key)));
     }
 
     private String returnerFilnavnMedFiltype(Vedlegg vedlegg, byte[] file) {
@@ -229,5 +221,14 @@ public class VedleggRessurs {
             totalStorrelse += file.getValueAs(File.class).length();
         }
         return totalStorrelse;
+    }
+
+    private void loggStatistikk(Map<String, Long> tidsbruk, String context) {
+        if (tidsbruk.get("Slutt") != null && tidsbruk.get("Start") != null) {
+            logger.info("{} tidsbruk : {}", context, (tidsbruk.get("Slutt") - tidsbruk.get("Start")));
+        }
+        tidsbruk.keySet().stream()
+                .filter(key -> !key.equalsIgnoreCase("Start") && !key.equalsIgnoreCase("Slutt"))
+                .forEach(key -> logger.info("{}: {}", key, tidsbruk.get(key)));
     }
 }

@@ -114,22 +114,6 @@ public class VedleggService {
         return vedleggPng;
     }
 
-    private static Vedlegg opprettVedlegg(Vedlegg vedlegg) {
-        return new Vedlegg()
-                .medVedleggId(null)
-                .medSoknadId(vedlegg.getSoknadId())
-                .medFaktumId(vedlegg.getFaktumId())
-                .medSkjemaNummer(vedlegg.getSkjemaNummer())
-                .medSkjemanummerTillegg(vedlegg.getSkjemanummerTillegg())
-                .medNavn(TilleggsInfoService.lesTittelFraJsonString(vedlegg.getNavn()))
-                .medStorrelse(vedlegg.getStorrelse())
-                .medAntallSider(vedlegg.getAntallSider())
-                .medData(null)
-                .medOpprettetDato(vedlegg.getOpprettetDato())
-                .medFillagerReferanse(vedlegg.getFillagerReferanse())
-                .medInnsendingsvalg(UnderBehandling);
-    }
-
     public List<Vedlegg> hentVedleggOgKvittering(WebSoknad soknad) {
         ArrayList<Vedlegg> vedleggForventninger = new ArrayList<>(soknad.hentValidertVedlegg());
         final String AAP_UTLAND_SKJEMANUMMER = new AAPUtlandetInformasjon().getSkjemanummer().get(0);
@@ -144,26 +128,14 @@ public class VedleggService {
     }
 
     @Transactional
-    public long lagreVedlegg(Vedlegg vedlegg, byte[] input) {
-        long resultat = lagrePDFVedlegg(vedlegg, input);
+    public long lagreVedlegg(Vedlegg vedlegg) {
+        byte[] data = vedlegg.getData();
+        logger.info("SoknadId={} VedleggId={} filstørrelse={}", vedlegg.getSoknadId(), vedlegg.getVedleggId(), data != null ? data.length : "null");
+
+        long resultat = vedleggRepository.opprettEllerEndreVedlegg(vedlegg, data);
+
         repository.settSistLagretTidspunkt(vedlegg.getSoknadId());
         return resultat;
-    }
-
-    private long lagrePDFVedlegg(Vedlegg vedlegg, byte[] side) {
-        logger.info("SoknadId={} VedleggId={} filstørrelse={}", vedlegg.getSoknadId(), vedlegg.getVedleggId(), side.length);
-        Vedlegg sideVedlegg = opprettVedlegg(vedlegg);
-
-        if (!Arrays.equals(vedlegg.getData(), side))
-            logger.warn("Vedlegg_cleanup - Payload differs!");
-        if (vedlegg.getNavn() == null)
-            logger.warn("Vedlegg_cleanup - navn is null!");
-        if (vedlegg.getNavn() != null && !vedlegg.getNavn().equals(sideVedlegg.getNavn()))
-            logger.warn("Vedlegg_cleanup - Navn differs! Navn original: {}, Navn new: {}", vedlegg.getNavn(), sideVedlegg.getNavn());
-        if (sideVedlegg.getFilnavn() != null)
-            logger.warn("Vedlegg_cleanup - Filnavn not null! Filnavn original: {}, Filnavn new: {}", vedlegg.getFilnavn(), sideVedlegg.getFilnavn());
-
-        return vedleggRepository.opprettEllerEndreVedlegg(sideVedlegg, side);
     }
 
     public List<Vedlegg> hentVedleggUnderBehandling(String behandlingsId, String fillagerReferanse) {

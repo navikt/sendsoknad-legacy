@@ -19,7 +19,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -49,8 +48,6 @@ public class VedleggServiceTest {
     @InjectMocks
     private VedleggService vedleggService;
 
-    private static final Boolean skrivTilDisk = false;
-
     @Test
     public void skalAKonvertereFilerVedOpplasting() throws IOException {
         Vedlegg vedlegg = new Vedlegg()
@@ -62,50 +59,32 @@ public class VedleggServiceTest {
                 .medStorrelse(1L)
                 .medAntallSider(1)
                 .medFillagerReferanse(null)
-                .medData("".getBytes())
+                .medData(PdfUtilities.createPDFFromImage(getBytesFromFile("/images/bilde.jpg")))
                 .medOpprettetDato(DateTime.now().getMillis())
                 .medInnsendingsvalg(VedleggKreves);
 
         ArgumentCaptor<byte[]> captor = ArgumentCaptor.forClass(byte[].class);
         when(vedleggRepository.opprettEllerEndreVedlegg(any(Vedlegg.class), captor.capture())).thenReturn(11L);
 
-        byte[] imgData = getBytesFromFile("/images/bilde.jpg");
-        long id = vedleggService.lagreVedlegg(vedlegg, PdfUtilities.createPDFFromImage(imgData));
+        long id = vedleggService.lagreVedlegg(vedlegg);
         assertEquals(11L, id);
     }
 
     @Test
-    public void skalGenererForhandsvisning_liteVedlegg() throws IOException {
-        String filnavn = "minimal";
-        long start = System.currentTimeMillis();
+    public void skalGenererForhandsvisning_liteVedlegg() {
         byte[] bytes = vedleggService.lagForhandsvisning(20631L, 0);
-        long slutt = System.currentTimeMillis();
         byte[] bytes2 = vedleggService.lagForhandsvisning(20631L, 0);
-        long slutt2 = System.currentTimeMillis();
 
         assertEquals(bytes.length, bytes2.length);
-
-        if (skrivTilDisk) {
-            System.out.println("Tidsbruk=" + (slutt-start));
-            System.out.println("Tidsbruk2=" + (slutt2-slutt));
-            skrivTilDisk("c:/temp/delme-"+filnavn+".png", bytes);
-        }
     }
 
     @Test
-    public void skalGenererForhandsvisning_stortVedlegg() throws IOException {
-        String filnavn = "SCN_0004";
+    public void skalGenererForhandsvisning_stortVedlegg() {
         long start = System.currentTimeMillis();
         byte[] bytes = vedleggService.lagForhandsvisning(1L, 0);
         long slutt = System.currentTimeMillis();
         byte[] bytes2 = vedleggService.lagForhandsvisning(1L, 0);
         long slutt2 = System.currentTimeMillis();
-
-        if (skrivTilDisk) {
-            System.out.println("Tidsbruk=" + (slutt-start));
-            System.out.println("Tidsbruk2=" + (slutt2-slutt));
-            skrivTilDisk("c:/temp/delme-"+filnavn+".png", bytes);
-        }
 
         assertEquals(bytes.length, bytes2.length);
         assertTrue(slutt2 - slutt <= slutt - start);
@@ -125,14 +104,7 @@ public class VedleggServiceTest {
         assertEquals(bytes.length, bytes2.length);
         assertTrue(slutt2 - slutt <= slutt - start);
 
-        byte[] side1 = vedleggService.lagForhandsvisning(20631L, 0);
-
-
-        if (skrivTilDisk) {
-            System.out.println("Tidsbruk=" + (slutt-start));
-            System.out.println("Tidsbruk2=" + (slutt2-slutt));
-            skrivTilDisk("c:/temp/delme-"+filnavn+".png", side1);
-        }
+        vedleggService.lagForhandsvisning(20631L, 0);
     }
 
     @Test
@@ -154,14 +126,14 @@ public class VedleggServiceTest {
                 .medStorrelse(1L)
                 .medAntallSider(1)
                 .medFillagerReferanse(null)
-                .medData("".getBytes())
+                .medData(getBytesFromFile("/pdfs/navskjema.pdf"))
                 .medOpprettetDato(DateTime.now().getMillis())
                 .medInnsendingsvalg(VedleggKreves);
 
         ArgumentCaptor<byte[]> captor = ArgumentCaptor.forClass(byte[].class);
         when(vedleggRepository.opprettEllerEndreVedlegg(any(Vedlegg.class), captor.capture())).thenReturn(10L, 11L, 12L, 13L, 14L);
 
-        long id = vedleggService.lagreVedlegg(vedlegg, getBytesFromFile("/pdfs/navskjema.pdf"));
+        long id = vedleggService.lagreVedlegg(vedlegg);
         assertTrue(PdfUtilities.isPDF(captor.getValue()));
         assertEquals(10L, id);
     }
@@ -268,11 +240,5 @@ public class VedleggServiceTest {
     public static byte[] getBytesFromFile(String path) throws IOException {
         InputStream resourceAsStream = VedleggServiceTest.class.getResourceAsStream(path);
         return IOUtils.toByteArray(resourceAsStream);
-    }
-
-    private void skrivTilDisk(String sti, byte[] bytes)throws IOException {
-        try (FileOutputStream stream = new FileOutputStream(sti)) {
-            stream.write(bytes);
-        }
     }
 }

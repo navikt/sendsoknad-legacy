@@ -93,9 +93,6 @@ public class VedleggRepositoryJdbc extends JdbcDaoSupport implements VedleggRepo
                     protected void setValues(PreparedStatement ps, LobCreator lobCreator) throws SQLException {
                         Vedlegg.Status opprinneligInnsendingsvalg = vedlegg.getOpprinneligInnsendingsvalg();
 
-                        if (vedlegg.getFilnavn() != null)
-                            logger.warn("Vedlegg_cleanup - Filnavn not null! Filnavn: {}", vedlegg.getFilnavn());
-
                         ps.setLong(1, vedlegg.getVedleggId());
                         ps.setLong(2, vedlegg.getSoknadId());
                         ps.setObject(3, vedlegg.getFaktumId());
