@@ -111,16 +111,23 @@ public class VedleggRessurs {
                                       @QueryParam("behandlingsId") String behandlingsId,
                                       @FormDataParam("files[]") final List<FormDataBodyPart> files) {
 
-        Vedlegg forventning = vedleggService.hentVedlegg(vedleggId, false);
+        logger.info("Will begin to upload {} files. vedleggId={}, behandlingsId={}", files.size(), vedleggId, behandlingsId);
+        try {
+            Vedlegg forventning = vedleggService.hentVedlegg(vedleggId, false);
 
-        long totalStorrelse = estimerTotalVedleggsStorrelse(behandlingsId, files, forventning);
-        if (totalStorrelse > MAKS_TOTAL_FILSTORRELSE) {
-            logger.info("Totalstørrelse="+ totalStorrelse + " for vedleggId="+vedleggId + " forsøkt lastet opp");
-            throw new OpplastingException("Kunne ikke lagre fil fordi total filstørrelse er for stor", null, "vedlegg.opplasting.feil.forStor");
+            long totalStorrelse = estimerTotalVedleggsStorrelse(behandlingsId, files, forventning);
+            if (totalStorrelse > MAKS_TOTAL_FILSTORRELSE) {
+                logger.info("Totalstørrelse={} for vedleggId={} forsøkt lastet opp", totalStorrelse, vedleggId);
+                throw new OpplastingException("Kunne ikke lagre fil fordi total filstørrelse er for stor", null, "vedlegg.opplasting.feil.forStor");
+            }
+
+            List<byte[]> fileContent = files.stream().map(this::getByteArray).collect(Collectors.toList());
+            return uploadFiles(behandlingsId, forventning, fileContent);
+
+        } catch (Exception e) {
+            logger.error("Error when uploading files for vedleggsId={}, behandingsId={}", vedleggId, behandlingsId, e);
+            throw e;
         }
-
-        List<byte[]> fileContent = files.stream().map(this::getByteArray).collect(Collectors.toList());
-        return uploadFiles(behandlingsId, forventning, fileContent);
     }
 
     List<Vedlegg> uploadFiles(String behandlingsId, Vedlegg forventning, List<byte[]> files) {
@@ -130,6 +137,7 @@ public class VedleggRessurs {
     }
 
     private void validereFilformat(List<byte[]> files) {
+        logger.info("Validating files");
         for (byte[] file : files) {
 
             if (PdfUtilities.isPDF(file)) {
@@ -152,9 +160,10 @@ public class VedleggRessurs {
 
     private List<byte[]> konverterTilPdf(List<byte[]> files) {
         return files.stream().map(file -> {
-            if (PdfUtilities.isImage(file))
+            if (PdfUtilities.isImage(file)) {
+                logger.info("Converting image to pdf");
                 return PdfUtilities.createPDFFromImage(file);
-            else
+            } else
                 return file;
         }).collect(Collectors.toList());
     }
