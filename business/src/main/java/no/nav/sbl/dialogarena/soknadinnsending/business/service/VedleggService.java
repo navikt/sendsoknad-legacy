@@ -36,7 +36,10 @@ import javax.inject.Named;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
@@ -44,7 +47,6 @@ import static java.util.Collections.sort;
 import static no.nav.sbl.dialogarena.sendsoknad.domain.DelstegStatus.SKJEMA_VALIDERT;
 import static no.nav.sbl.dialogarena.sendsoknad.domain.Vedlegg.PAAKREVDE_VEDLEGG;
 import static no.nav.sbl.dialogarena.sendsoknad.domain.Vedlegg.Status.LastetOpp;
-import static no.nav.sbl.dialogarena.sendsoknad.domain.Vedlegg.Status.UnderBehandling;
 import static no.nav.sbl.dialogarena.soknadinnsending.business.service.Transformers.toInnsendingsvalg;
 import static no.nav.sbl.dialogarena.soknadinnsending.consumer.skjemaoppslag.SkjemaOppslagService.SKJEMANUMMER_KVITTERING;
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
@@ -130,7 +132,7 @@ public class VedleggService {
     @Transactional
     public long lagreVedlegg(Vedlegg vedlegg) {
         byte[] data = vedlegg.getData();
-        logger.info("SoknadId={} VedleggId={} filstørrelse={}", vedlegg.getSoknadId(), vedlegg.getVedleggId(), data != null ? data.length : "null");
+        logger.info("SoknadId={} filstørrelse={}", vedlegg.getSoknadId(), data != null ? data.length : "null");
 
         long resultat = vedleggRepository.opprettEllerEndreVedlegg(vedlegg, data);
 
