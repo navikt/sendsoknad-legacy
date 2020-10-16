@@ -107,7 +107,7 @@
         <modig-testcertificates.version>1.2.4</modig-testcertificates.version>
 
         <args4j.version>2.33</args4j.version>
-        <junit.version>4.13</junit.version>
+        <junit.version>4.13.1</junit.version>
         <no.digipost.digg.version>0.22</no.digipost.digg.version>
         <org.assertj.assertj-core.version>3.14.0</org.assertj.assertj-core.version>
         <org.eclipse.jetty.version>9.0.5.v20130815</org.eclipse.jetty.version>
