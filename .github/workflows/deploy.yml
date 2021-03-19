@@ -32,9 +32,7 @@ jobs:
       exists: ${{ steps.set_output.outputs.exists }}
 
   build:
-    runs-on: [self-hosted, java-8]
-    needs: check_docker_image_exists
-    if: needs.check_docker_image_exists.outputs.exists != 'true'
+    runs-on: self-hosted
     steps:
       - uses: actions/checkout@v2
       - uses: actions/cache@v2
