@@ -5,9 +5,9 @@ on:
   workflow_dispatch:
     inputs:
       environment:
-        description: 'Miljø'
+        description: 'Environment'
         required: true
-        default: 'q2'
+        default: 'q0'
 
 env:
   IMAGE: docker.pkg.github.com/${{ github.repository }}/sendsoknad:${{ github.sha }}
@@ -32,7 +32,7 @@ jobs:
       exists: ${{ steps.set_output.outputs.exists }}
 
   build:
-    runs-on: [self-hosted, java-15]
+    runs-on: [self-hosted, java-8]
     needs: check_docker_image_exists
     if: needs.check_docker_image_exists.outputs.exists != 'true'
     steps:
@@ -45,7 +45,7 @@ jobs:
             ${{ runner.os }}-maven-
       - name: Build
         run: |
-          JAVA_HOME=/usr/local/openjdk-15
+          JAVA_HOME=/usr/local/openjdk-8
           mvn clean package -B -e -U
       - uses: actions/upload-artifact@v2
         with:
@@ -116,6 +116,6 @@ jobs:
           SLACK_COLOR: "${{ job.status == 'success' && 'good' || 'danger' }}"
           SLACK_USERNAME: Github Actions
           SLACK_ICON: https://github.com/github.png?size=48
-          SLACK_TITLE: "sendsoknad ${{ job.status == 'success' && 'ble deployet' || 'kunne ikke deployes' }} til ${{ env.ENVIRONMENT }}"
+          SLACK_TITLE: "sendsoknad ${{ job.status == 'success' && 'was deployed' || 'could not be deployed' }} to ${{ env.ENVIRONMENT }}"
           SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
           SLACK_MESSAGE: ${{ env.COMMIT_MSG }}
