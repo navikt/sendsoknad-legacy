@@ -78,7 +78,7 @@
         <nocommons.version>0.5</nocommons.version>
         <commons-collections.version>4.4</commons-collections.version>
         <commons-codec.version>1.13</commons-codec.version>
-        <commons-io.version>2.6</commons-io.version>
+        <commons-io.version>2.7</commons-io.version>
         <commons-fileupload.version>1.4</commons-fileupload.version>
 
         <ch.qos.logback-classic.version>1.2.3</ch.qos.logback-classic.version>
